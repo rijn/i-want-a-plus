@@ -62,3 +62,4 @@ dist/
 dev.db
 
 *.swp
+yarn.lock
