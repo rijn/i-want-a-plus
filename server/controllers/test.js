@@ -5,9 +5,9 @@ const sequelize = require('../models').sequelize;
 module.exports = (req, res) => {
     return Q()
         .then(() => {
-            return sequelize.query('SELECT VERSION();', { type: sequelize.QueryTypes.SELECT });
+            return sequelize.query('SELECT `SID` FROM `Students`;', { type: sequelize.QueryTypes.SELECT });
         })
-        .done(version => {
-            res.status(201).send(version);
+        .done(sids => {
+            res.status(201).send(sids);
         }, errorHandler(res));
 };
