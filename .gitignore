@@ -63,3 +63,5 @@ dev.db
 
 *.swp
 yarn.lock
+
+package-lock.json

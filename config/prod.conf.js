@@ -3,11 +3,11 @@ const path = require('path');
 module.exports = {
     'db': {
         dialect: 'mysql',
-        host: '',
+        host: 'fa17-cs411-02.cs.illinois.edu',
         port: 3306,
-        username: '',
-        password: '',
-        database: '',
+        username: 'simple',
+        password: 's0metimesNaive*',
+        database: 'iWantAPlus',
         pool: {
             max: 5,
             min: 0,
