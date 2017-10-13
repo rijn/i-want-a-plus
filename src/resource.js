@@ -13,11 +13,7 @@ export default class Resource {
 
     static install (Vue, options) {
         this.models = {
-            files: Vue.resource('files'),
-            posts: Vue.resource('posts{/id}'),
-            tokens: Vue.resource('tokens', {}, {
-                generate: { method: 'POST' }
-            })
+            version: Vue.resource('')
         };
 
         Vue.prototype.$api = this.models;
