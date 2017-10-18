@@ -13,7 +13,7 @@ export default class Resource {
 
     static install (Vue, options) {
         this.models = {
-            version: Vue.resource('')
+            version: Vue.resource('test')
         };
 
         Vue.prototype.$api = this.models;

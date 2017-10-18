@@ -45,7 +45,7 @@ app.use(function (req, res, next) {
  *});
  */
 
-app.use('/api', require('./server/app')());
+app.use('/api', require('./api/app')());
 
 app.use('/files', express.static(path.join(__dirname, '../files')));
 
@@ -75,7 +75,7 @@ var port = process.env.PORT || 8080;
 
 const Q = require('q');
 
-var db = require('./server/models');
+var db = require('./api/models');
 
 module.exports = Q
     .fcall(() => {
