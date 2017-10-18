@@ -1,13 +1,12 @@
-const Q = require('q');
-const errorHandler = require('../utils/error-handler');
-const sequelize = require('../models').sequelize;
+var models = require('../models');
+var pipeline = require('../utils/pipeline');
 
-module.exports = (req, res) => {
-    return Q()
-        .then(() => {
-            return sequelize.query('SELECT `SID` FROM `Students`;', { type: sequelize.QueryTypes.SELECT });
-        })
-        .done(sids => {
-            res.status(201).send(sids);
-        }, errorHandler(res));
+module.exports = (options) => {
+    var tasks = [
+        (options) => {
+            return models.sequelize.query('SELECT VERSION();', { type: models.sequelize.QueryTypes.SELECT });
+        }
+    ];
+
+    return pipeline(tasks, options);
 };
