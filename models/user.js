@@ -3,16 +3,16 @@
 'use strict';
 
 const Hashids = require('hashids');
-const encoderDecoder = new Hashids('user', 16)
+const encoderDecoder = new Hashids('user', 16);
 
 module.exports = (sequelize, DataTypes) => {
     var User = sequelize.define('User', {
-        username: {
+        email: {
             type: DataTypes.STRING,
             allowNull: false,
             validate: {
                 notEmpty: true,
-                is: ['^([a-zA-Z0-9]|[_]){4,16}$', 'gi']
+                isEmail: true
             }
         },
         password: {
@@ -27,25 +27,15 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false
         },
-        email: {
-            type: DataTypes.STRING,
-            validate: {
-                notEmpty: true,
-                isEmail: true
-            }
-        },
         authority: {
             type: DataTypes.INTEGER,
             allowNull: false,
             defaultValue: 0
-        },
-        avatar: {
-            type: DataTypes.STRING(64)
         }
     }, {
         paranoid: true,
         getterMethods: {
-            _id () { return encoderDecoder.encode('User', this.id); }
+            _id () { return encoderDecoder.encode(this.id); }
         },
         setterMethods: {}
     });

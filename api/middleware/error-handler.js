@@ -55,6 +55,8 @@ _private.BasicErorRenderer = function BasicErrorRenderer (err, req, res, next) {
     return res.send(res.statusCode + ' ' + err.message);
 };
 
+errorHandler.ServerError = ServerError;
+
 errorHandler.ResourceNotFoundError = function ResourceNotFoundError (req, res, next) {
     next(new ServerError({ message: 'Resource Not Found', statusCode: 404 }));
 };

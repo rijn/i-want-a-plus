@@ -101,7 +101,7 @@ module.exports = Q
     .then(({ db }) => {
         var deferred = Q.defer();
         db.sequelize
-            .sync({ force: false, logging: false })
+            .sync({ force: true, logging: false })
             .then(() => {
                 console.log('Sync successfully.');
                 deferred.resolve({ db });

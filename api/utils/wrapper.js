@@ -19,6 +19,9 @@ module.exports = function (apiMethod) {
             if (req.method === 'DELETE') {
                 return res.status(204).end();
             }
+            if (req.method === 'POST') {
+                return res.status(201).send(response);
+            }
             if (res.get('Content-Type') && res.get('Content-Type').indexOf('text/csv') === 0) {
                 return res.status(200).send(response);
             }

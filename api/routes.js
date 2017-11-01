@@ -12,5 +12,7 @@ module.exports = function apiRoutes () {
     apiRouter.get('/auth/login', require('./controllers/auth').login);
     apiRouter.get('/auth/logout', require('./controllers/auth').logout);
 
+    apiRouter.post('/user', api.wrapper(require('./controllers/user').signup));
+
     return apiRouter;
 };
