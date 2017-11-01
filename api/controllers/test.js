@@ -1,4 +1,4 @@
-var models = require('../models');
+var models = require('../../models');
 var pipeline = require('../utils/pipeline');
 
 module.exports = (options) => {

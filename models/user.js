@@ -1,0 +1,54 @@
+/* eslint-disable no-useless-escape */
+
+'use strict';
+
+const Hashids = require('hashids');
+const encoderDecoder = new Hashids('user', 16)
+
+module.exports = (sequelize, DataTypes) => {
+    var User = sequelize.define('User', {
+        username: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate: {
+                notEmpty: true,
+                is: ['^([a-zA-Z0-9]|[_]){4,16}$', 'gi']
+            }
+        },
+        password: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate: {
+                notEmpty: true,
+                is: ['^([0-9a-zA-Z_\\\-/+!@#$%^&*]){6,255}$', 'gi']
+            }
+        },
+        salt: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        email: {
+            type: DataTypes.STRING,
+            validate: {
+                notEmpty: true,
+                isEmail: true
+            }
+        },
+        authority: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 0
+        },
+        avatar: {
+            type: DataTypes.STRING(64)
+        }
+    }, {
+        paranoid: true,
+        getterMethods: {
+            _id () { return encoderDecoder.encode('User', this.id); }
+        },
+        setterMethods: {}
+    });
+
+    return User;
+};

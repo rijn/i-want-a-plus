@@ -42,6 +42,7 @@ _private.prepareError = function prepareError (err, req, res, next) {
 };
 
 _private.JSONErrorRenderer = function JSONErrorRenderer (err, req, res, next) {
+    console.log(err);
     res.json({
         errors: [{
             message: err.message,
@@ -54,8 +55,12 @@ _private.BasicErorRenderer = function BasicErrorRenderer (err, req, res, next) {
     return res.send(res.statusCode + ' ' + err.message);
 };
 
-errorHandler.resourceNotFound = function resourceNotFound (req, res, next) {
+errorHandler.ResourceNotFoundError = function ResourceNotFoundError (req, res, next) {
     next(new ServerError({ message: 'Resource Not Found', statusCode: 404 }));
+};
+
+errorHandler.NoPermissionError = function NoPermissionError (req, res, next) {
+    next(new ServerError({ message: 'Permission Denied', statusCode: 401 }));
 };
 
 errorHandler.handleJSONResponse = [

@@ -1,12 +1,16 @@
 var express = require('express');
-var server = require('.');
+var api = require('.');
 // var tmpdir = require('os').tmpdir;
 // var upload = require('multer')({dest: tmpdir()});
+var passport = require('./auth').passport;
 
 module.exports = function apiRoutes () {
     var apiRouter = express.Router();
 
-    apiRouter.get('/test', server.wrapper(server.test));
+    apiRouter.get('/test', api.wrapper(api.test));
+
+    apiRouter.get('/auth/login', require('./controllers/auth').login);
+    apiRouter.get('/auth/logout', require('./controllers/auth').logout);
 
     return apiRouter;
 };

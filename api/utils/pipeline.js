@@ -1,6 +1,6 @@
 const Promise = require('bluebird');
 
-const pipeline = (tasks = []) => {
+const pipeline = function (tasks = []) {
     var args = Array.prototype.slice.call(arguments, 1);
 
     var runTask = function (task, args) {

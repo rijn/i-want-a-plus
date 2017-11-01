@@ -11,11 +11,16 @@ var args = process.argv.slice(2);
 const app = express();
 const http = require('http').Server(app);
 
+app.use(require('morgan')('combined'));
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+app.use(require('cookie-parser')());
+app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
+
 app.use(multer({
-    dest: path.join(__dirname, '../files'),
+    dest: path.join(__dirname, '.files'),
     limits: {
         fieldNameSize: 100,
         files: 1,
@@ -45,9 +50,10 @@ app.use(function (req, res, next) {
  *});
  */
 
-app.use('/api', require('./api/app')());
+app.use('/api', require('./api/app')(app));
+// require('./api/app')(app);
 
-app.use('/files', express.static(path.join(__dirname, '../files')));
+app.use('/files', express.static(path.join(__dirname, './files')));
 
 const history = require('connect-history-api-fallback');
 app.use(history({
@@ -61,7 +67,7 @@ if (args.indexOf('--vue') > -1) {
     console.log('Injecting Vue Middleware...');
     require('./build/dev-middleware')(app);
 } else {
-    app.use('/', express.static(path.join(__dirname, '../dist')));
+    app.use('/', express.static(path.join(__dirname, './dist')));
 }
 
 if (args.indexOf('--livereload') > -1) {
@@ -75,7 +81,7 @@ var port = process.env.PORT || 8080;
 
 const Q = require('q');
 
-var db = require('./api/models');
+var db = require('./models');
 
 module.exports = Q
     .fcall(() => {
