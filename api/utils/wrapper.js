@@ -3,12 +3,15 @@ var _ = require('lodash');
 module.exports = function (apiMethod) {
     return function (req, res, next) {
         var object = req.body;
-        var options = _.extend({}, req.file, {ip: req.ip}, req.query, req.params, {
-            context: { },
-            mw: {
-                login: req.login
+        var options = _.extend({},
+            req.file, {ip: req.ip}, req.query, req.params, req.user,
+            {
+                context: { },
+                mw: {
+                    login: req.login
+                }
             }
-        });
+        );
 
         if (_.isEmpty(object)) {
             object = options;

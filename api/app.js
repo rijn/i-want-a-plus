@@ -8,13 +8,13 @@ module.exports = function setupApiApp () {
 
     apiApp.use(bodyParser.urlencoded({ extended: true }));
     apiApp.use(bodyParser.json());
-    apiApp.use(require('cookie-parser')());
-    apiApp.use(require('express-session')({ secret: 'i-want-a-plus', resave: true, saveUninitialized: true }));
+    // apiApp.use(require('cookie-parser')());
+    // apiApp.use(require('express-session')({ secret: 'i-want-a-plus', resave: true, saveUninitialized: true }));
 
     var passport = require('./auth').passport;
 
     apiApp.use(passport.initialize());
-    apiApp.use(passport.session());
+    // apiApp.use(passport.session());
 
     apiApp.use(routes());
     // routes(apiApp);
