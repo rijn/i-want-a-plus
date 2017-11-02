@@ -40,7 +40,7 @@ module.exports = function (grunt) {
         watch: {
             server: {
                 files: [
-                    'server/**/*.js'
+                    'api/**/*.js'
                 ],
                 tasks: [ 'eslint', 'express:dev' ],
                 options: {
@@ -73,7 +73,7 @@ module.exports = function (grunt) {
             },
             dev: {
                 options: {
-                    script: 'server',
+                    script: '.',
                     port: 8080,
                     args: []
                 }
