@@ -81,7 +81,6 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     PastCourse.associate = models => {
-        PastCourse.belongsTo(models.Course);
     };
 
     return PastCourse;

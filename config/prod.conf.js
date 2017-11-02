@@ -15,7 +15,7 @@ module.exports = {
         },
         logging: false,
         define: {
-            underscored: true
+            underscored: false
         }
     },
     'file': {
