@@ -16,7 +16,6 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     CurrentCourse.associate = models => {
-        CurrentCourse.belongsTo(models.Course);
     };
 
     return CurrentCourse;

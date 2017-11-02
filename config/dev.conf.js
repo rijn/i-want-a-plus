@@ -21,7 +21,7 @@ module.exports = merge(prodConf, {
         database: 'nodecho',
         logging: false,
         define: {
-            underscored: true
+            underscored: false
         }
     },
     'file': {

@@ -13,7 +13,7 @@ module.exports = merge(devConf, {
         database: 'nodecho',
         logging: false,
         define: {
-            underscored: true
+            underscored: false
         }
     },
     'file': {

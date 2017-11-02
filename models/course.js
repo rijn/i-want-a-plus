@@ -4,6 +4,14 @@
 
 module.exports = (sequelize, DataTypes) => {
     var Course = sequelize.define('Course', {
+        subject: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        number: {
+            type: DataTypes.INTEGER,
+            allowNull: false
+        },
         name: {
             type: DataTypes.STRING,
             allowNull: false
@@ -28,6 +36,8 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     Course.associate = models => {
+        Course.belongsTo(models.CurrentCourse, { constraint: false });
+        Course.belongsTo(models.PastCourse, { constraint: false });
         Course.belongsTo(models.School);
         Course.belongsToMany(models.Professor, {
             through: {
