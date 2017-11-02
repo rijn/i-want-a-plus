@@ -40,5 +40,17 @@ module.exports = (sequelize, DataTypes) => {
         setterMethods: {}
     });
 
+    User.associate = models => {
+        User.hasMany(models.Accesstoken);
+        User.hasMany(models.Comment);
+        User.belongsToMany(models.Course, {
+            through: {
+                model: models.Notify,
+                unique: false
+            },
+            foreignKey: 'user_id'
+        });
+    };
+
     return User;
 };
