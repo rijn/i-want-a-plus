@@ -4,11 +4,12 @@ module.exports = function (apiMethod) {
     return function (req, res, next) {
         var object = req.body;
         var options = _.extend({},
-            req.file, {ip: req.ip}, req.query, req.params, req.user,
+            req.file, {ip: req.ip}, req.query, req.params,
             {
                 context: { },
                 mw: {
-                    login: req.login
+                    login: req.login,
+                    user: req.user
                 }
             }
         );

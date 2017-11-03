@@ -10,7 +10,6 @@ passport.use(new BearerStrategy(
                 model: models.User
             }]
         }).then(accessToken => {
-            // console.log('accessToken', accessToken.User);
             if (accessToken) {
                 return done(null, accessToken.User);
             } else {
@@ -19,17 +18,5 @@ passport.use(new BearerStrategy(
         });
     }
 ));
-
-// passport.serializeUser(function (user, done) {
-//     done(null, user._id);
-// });
-
-// passport.deserializeUser(function (_id, done) {
-//     done(null, { _id: 1 });
-//     // db.users.findById(_id, function (err, user) {
-//     //   if (err) { return cb(err); }
-//     //   cb(null, user);
-//     // });
-// });
 
 module.exports = passport;

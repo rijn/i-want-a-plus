@@ -3,6 +3,7 @@ var api = require('.');
 // var tmpdir = require('os').tmpdir;
 // var upload = require('multer')({dest: tmpdir()});
 var passport = require('./auth').passport;
+const checkPermission = require('./auth').permission.checkPermission;
 
 module.exports = function apiRoutes () {
     var apiRouter = express.Router();
@@ -13,7 +14,15 @@ module.exports = function apiRoutes () {
 
     apiRouter.post('/user', api.wrapper(require('./controllers/user').signup));
     apiRouter.post('/user/login', api.wrapper(require('./controllers/user').login));
-    apiRouter.get('/user/profile', authPrivate, api.wrapper(require('./controllers/user').profile));
+    apiRouter.get('/user/profile',
+        authPrivate,
+        checkPermission(['view_profile']),
+        api.wrapper(require('./controllers/user').profile));
+
+    apiRouter.get('/data/upload_csv',
+        authPrivate,
+        checkPermission(['upload_csv']),
+        api.wrapper(require('./controllers/data').updateCsv));
 
     return apiRouter;
 };

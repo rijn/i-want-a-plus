@@ -27,7 +27,12 @@ module.exports = {
             .kdf(password + salt, { N: 2, r: 1, p: 1 })
             .then(result => result.toString('base64'))
             .then(password => {
-                return models.User.create({ email, password, salt });
+                return models.User.create({
+                    email, password, salt,
+                    GroupId: 1
+                }, {
+                    include: [{ model: models.Group }]
+                });
             })
             .then(user => {
                 return _.assign(options, { _id: user._id });

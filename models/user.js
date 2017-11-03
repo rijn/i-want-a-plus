@@ -26,11 +26,6 @@ module.exports = (sequelize, DataTypes) => {
         salt: {
             type: DataTypes.STRING,
             allowNull: false
-        },
-        authority: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            defaultValue: 0
         }
     }, {
         paranoid: true,
