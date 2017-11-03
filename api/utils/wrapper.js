@@ -4,7 +4,8 @@ module.exports = function (apiMethod) {
     return function (req, res, next) {
         var object = req.body;
         var options = _.extend({},
-            req.file, {ip: req.ip}, req.query, req.params,
+            _.keyBy(req.files, 'fieldname'),
+            { ip: req.ip }, req.query, req.params,
             {
                 context: { },
                 mw: {

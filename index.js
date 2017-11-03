@@ -4,8 +4,6 @@ var path = require('path');
 var express = require('express');
 var bodyParser = require('body-parser');
 var expressValidator = require('express-validator');
-var multer = require('multer');
-var storage = multer.memoryStorage();
 var args = process.argv.slice(2);
 
 const app = express();
@@ -18,16 +16,6 @@ app.use(bodyParser.json());
 
 app.use(require('cookie-parser')());
 app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
-
-app.use(multer({
-    dest: path.join(__dirname, '.files'),
-    limits: {
-        fieldNameSize: 100,
-        files: 1,
-        fileSize: 1 * 1024 * 1024
-    },
-    storage: storage
-}).any());
 
 // inject validator
 app.use(expressValidator({

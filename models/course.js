@@ -8,11 +8,11 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false
         },
-        number: {
+        course: {
             type: DataTypes.INTEGER,
             allowNull: false
         },
-        name: {
+        title: {
             type: DataTypes.STRING,
             allowNull: false
         },
@@ -24,7 +24,13 @@ module.exports = (sequelize, DataTypes) => {
             }
         },
         term: {
-            type: DataTypes.STRING
+            type: DataTypes.STRING,
+            validate: {
+                isIn: [ [ 'Fall', 'Spring', 'Summer' ] ]
+            }
+        },
+        year: {
+            type: DataTypes.INTEGER
         },
         section: {
             type: DataTypes.STRING

@@ -19,7 +19,7 @@ module.exports = function apiRoutes () {
         checkPermission(['view_profile']),
         api.wrapper(require('./controllers/user').profile));
 
-    apiRouter.get('/data/upload_csv',
+    apiRouter.post('/data/upload_csv',
         authPrivate,
         checkPermission(['upload_csv']),
         api.wrapper(require('./controllers/data').updateCsv));
