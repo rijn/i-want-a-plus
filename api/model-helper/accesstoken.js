@@ -9,7 +9,7 @@ module.exports = {
     create: (options) => {
         let { user: { id } } = options;
         let token = random(64);
-        return models.Accesstoken.create({ token, user_id: id }, {
+        return models.Accesstoken.create({ token, UserId: id }, {
             include: [{ model: models.User }]
         });
     }

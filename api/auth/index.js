@@ -1,4 +1,2 @@
-var passport = require('./passport');
-
-exports.passport = passport;
-exports.authenticate = require('./authenticate');
+exports.passport = require('./passport');
+exports.permission = require('./permission');

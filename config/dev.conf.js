@@ -19,7 +19,7 @@ module.exports = merge(prodConf, {
         user: 'root',
         password: 'root',
         database: 'nodecho',
-        logging: false,
+        logging: true,
         define: {
             underscored: false
         }

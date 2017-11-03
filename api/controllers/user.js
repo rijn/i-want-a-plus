@@ -1,6 +1,6 @@
 const utils = require('../utils');
 const { pipeline, pick } = utils;
-const { Accesstoken, User } = require('../models');
+const { Accesstoken, User } = require('../model-helper');
 
 exports.signup = (options) => {
     let tasks = [
@@ -31,7 +31,10 @@ exports.profile = (options) => {
     let tasks = [
         // TODO: schema check
         // TODO: data pickup
-        pick([ '_id' ])
+        (options) => {
+            console.log(options.mw.user.id);
+        }
+        // pick([ '_id' ])
     ];
 
     return pipeline(tasks, options);

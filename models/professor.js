@@ -4,7 +4,11 @@
 
 module.exports = (sequelize, DataTypes) => {
     var Professor = sequelize.define('Professor', {
-        name: {
+        firstName: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        lastName: {
             type: DataTypes.STRING,
             allowNull: false
         }
