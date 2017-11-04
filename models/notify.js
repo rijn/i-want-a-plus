@@ -9,11 +9,11 @@ module.exports = (sequelize, DataTypes) => {
             primaryKey: true,
             autoIncrement: true
         },
-        user_id: {
+        UserId: {
             type: DataTypes.INTEGER,
             unique: 'notify'
         },
-        course_id: {
+        CourseId: {
             type: DataTypes.INTEGER,
             unique: 'notify'
         }

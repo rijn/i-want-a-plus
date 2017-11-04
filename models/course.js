@@ -4,6 +4,25 @@
 
 module.exports = (sequelize, DataTypes) => {
     var Course = sequelize.define('Course', {
+        year: {
+            type: DataTypes.INTEGER,
+            unique: 'uniqueCourse'
+        },
+        term: {
+            type: DataTypes.STRING,
+            validate: {
+                isIn: [ [ 'Fall', 'Spring', 'Summer' ] ]
+            },
+            unique: 'uniqueCourse'
+        },
+        crn: {
+            type: DataTypes.STRING(5),
+            allowNull: false,
+            // validate: {
+            //     is: ['^\d{5}$', 'i']
+            // },
+            unique: 'uniqueCourse'
+        },
         subject: {
             type: DataTypes.STRING,
             allowNull: false
@@ -15,25 +34,6 @@ module.exports = (sequelize, DataTypes) => {
         title: {
             type: DataTypes.STRING,
             allowNull: false
-        },
-        crn: {
-            type: DataTypes.STRING(5),
-            allowNull: false,
-            // validate: {
-            //     is: ['^\d{5}$', 'i']
-            // },
-            unique: 'uniqueCourse'
-        },
-        term: {
-            type: DataTypes.STRING,
-            validate: {
-                isIn: [ [ 'Fall', 'Spring', 'Summer' ] ]
-            },
-            unique: 'uniqueCourse'
-        },
-        year: {
-            type: DataTypes.INTEGER,
-            unique: 'uniqueCourse'
         },
         section: {
             type: DataTypes.STRING
@@ -53,7 +53,7 @@ module.exports = (sequelize, DataTypes) => {
                 model: models.Teach,
                 unique: false
             },
-            foreignKey: 'course_id'
+            foreignKey: 'CourseId'
         });
         Course.hasMany(models.Comment);
         Course.belongsToMany(models.User, {
@@ -61,7 +61,7 @@ module.exports = (sequelize, DataTypes) => {
                 model: models.Notify,
                 unique: false
             },
-            foreignKey: 'course_id'
+            foreignKey: 'CourseId'
         });
     }
 

@@ -10,7 +10,7 @@ const db = {};
 fs
     .readdirSync(__dirname)
     .filter(file => {
-        return (file.indexOf('.') !== 0) && (file !== 'index.js');
+        return (file.indexOf('.') !== 0) && (file !== 'index.js') && (file !== 'utils.js');
     })
     .forEach(file => {
         var model = sequelize.import(path.join(__dirname, file));
@@ -25,5 +25,6 @@ Object.keys(db).forEach(modelName => {
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
+db.utils = require('./utils');
 
 module.exports = db;

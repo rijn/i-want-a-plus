@@ -21,8 +21,11 @@ module.exports = function apiRoutes () {
 
     apiRouter.post('/data/upload_csv',
         authPrivate,
-        checkPermission(['upload_csv']),
+        // checkPermission(['upload_csv']),
         api.wrapper(require('./controllers/data').updateCsv));
+
+    apiRouter.get('/course',
+        api.wrapper(require('./controllers/course').get));
 
     return apiRouter;
 };
