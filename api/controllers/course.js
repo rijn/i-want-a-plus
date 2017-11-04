@@ -56,7 +56,7 @@ exports.get = (options) => {
                     }
                     return list;
                 })
-            }, _.pick(options, plusField)));
+            }, _.mapValues(_.pick(options, plusField), v => _.toInteger(v))));
         }
     ];
 
