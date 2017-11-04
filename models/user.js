@@ -19,8 +19,8 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false,
             validate: {
-                notEmpty: true,
-                is: ['^([0-9a-zA-Z_\\\-/+!@#$%^&*]){6,255}$', 'gi']
+                notEmpty: true
+                // is: ['^([0-9a-zA-Z_\\\-/+!@#$%^&*]){6,255}$', 'gi']
             }
         },
         salt: {

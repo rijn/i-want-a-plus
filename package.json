@@ -12,6 +12,7 @@
     "test": "npm run unit && npm run e2e"
   },
   "dependencies": {
+    "bcrypt": "^1.0.3",
     "cookie-parser": "^1.4.3",
     "csv": "^2.0.0",
     "express-session": "^1.15.6",
@@ -29,7 +30,6 @@
     "passport-local": "^1.0.0",
     "q": "^1.5.0",
     "rimraf": "^2.6.1",
-    "scrypt": "^6.0.3",
     "sequelize": "^4.2.1",
     "sqlite3": "^3.1.8",
     "tryrequire": "^1.1.5",
