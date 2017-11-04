@@ -16,7 +16,35 @@ module.exports = Q.fcall(() => {
             }),
             models.Permission.create({ name: 'upload_csv', GroupId: 2 }, {
                 include: [{ model: models.Group }]
+            }),
+            models.Course.create({
+                subject: 'CS',
+                course: 125,
+                title: 'Programming',
+                crn: '12345',
+                term: 'Fall',
+                year: 2016,
+                section: 'A',
+                PastCourse: {
+                    ap: 9,
+                    a:  8,
+                    am: 3,
+                    bp: 0,
+                    b:  6,
+                    bm: 0,
+                    cp: 1,
+                    c:  1,
+                    cm: 0,
+                    dp: 0,
+                    d:  0,
+                    dm: 0,
+                    f:  0,
+                    w:  0
+                }
+            }, {
+                include: [ models.PastCourse ]
             })
         ]);
     });
 }).done();
+

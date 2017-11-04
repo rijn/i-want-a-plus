@@ -6,7 +6,7 @@ exports.updateCsv = (options) => {
     let tasks = [
         // TODO: schema check
         // TODO: data pickup
-        pick([ 'csv', 'password' ]),
+        pick([ 'csv' ]),
         (options) => {
             return new Promise((resolve) => {
                 let parser = require('csv-parse')({ delimiter: ',' }, (err, data) => {

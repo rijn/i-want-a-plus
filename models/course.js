@@ -19,18 +19,21 @@ module.exports = (sequelize, DataTypes) => {
         crn: {
             type: DataTypes.STRING(5),
             allowNull: false,
-            validate: {
-                is: ['^\d{5}$', 'i']
-            }
+            // validate: {
+            //     is: ['^\d{5}$', 'i']
+            // },
+            unique: 'uniqueCourse'
         },
         term: {
             type: DataTypes.STRING,
             validate: {
                 isIn: [ [ 'Fall', 'Spring', 'Summer' ] ]
-            }
+            },
+            unique: 'uniqueCourse'
         },
         year: {
-            type: DataTypes.INTEGER
+            type: DataTypes.INTEGER,
+            unique: 'uniqueCourse'
         },
         section: {
             type: DataTypes.STRING
