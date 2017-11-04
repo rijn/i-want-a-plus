@@ -9,12 +9,14 @@ module.exports = (sequelize, DataTypes) => {
             primaryKey: true,
             autoIncrement: true
         },
-        professor_id: {
+        ProfessorId: {
             type: DataTypes.INTEGER,
+            allowNull: false,
             unique: 'teach'
         },
-        course_id: {
+        CourseId: {
             type: DataTypes.INTEGER,
+            allowNull: false,
             unique: 'teach'
         }
     }, {

@@ -2,6 +2,8 @@
 
 'use strict';
 
+const _ = require('lodash');
+
 module.exports = (sequelize, DataTypes) => {
     var PastCourse = sequelize.define('PastCourse', {
         ap: {
@@ -73,11 +75,20 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             allowNull: false,
             defaultValue: 0
+        },
+        averageGpa: {
+            type: DataTypes.FLOAT,
+            defaultValue: 0
         }
     }, {
         paranoid: true,
         getterMethods: {},
-        setterMethods: {}
+        setterMethods: {},
+        hooks: {
+            beforeCreate: (pastCourse, options) => {
+                pastCourse.averageGpa = require('./utils').calculateAvgGpa(pastCourse);
+            }
+        }
     });
 
     PastCourse.associate = models => {

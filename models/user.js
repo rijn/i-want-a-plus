@@ -44,7 +44,7 @@ module.exports = (sequelize, DataTypes) => {
                 model: models.Notify,
                 unique: false
             },
-            foreignKey: 'user_id'
+            foreignKey: 'UserId'
         });
     };
 

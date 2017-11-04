@@ -5,7 +5,7 @@ var models = require('./models');
 module.exports = Q.fcall(() => {
     return models.sequelize.authenticate();
 }).then(() => {
-    return models.sequelize.sync({ force: true, logging: false });
+    return models.sequelize.sync({ force: true, logging: true });
 }).then(() => {
     return models.sequelize.transaction(function (t1) {
         return Promise.all([

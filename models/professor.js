@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
                 model: models.Teach,
                 unique: false
             },
-            foreignKey: 'professor_id'
+            foreignKey: 'ProfessorId'
         });
     };
 
