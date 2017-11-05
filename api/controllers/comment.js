@@ -26,11 +26,26 @@ exports.post = (object, options) => {
     return pipeline(tasks, options);
 };
 
+let checkUserAndComment = (CommentId, UserId) => {
+    return sequelize.query(`...`);
+}
+
 exports.update = (object, options) => {
     // update comment through id
     // object.content
     let tasks = [
-        // todo
+        (options) => {
+            return checkUserAndComment(commentId, userId).then((result) => {
+                if (result.count == 1) {
+                    return options;
+                } else {
+                    throw ServerError({ message: "", statusCode: 409 });
+                }
+            })
+        },
+        (options) => {
+            ....
+        }
     ];
 
     console.log(object, options, options.mw.user.id);
