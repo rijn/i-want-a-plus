@@ -31,6 +31,16 @@ module.exports = function apiRoutes () {
         authPrivate,
         api.wrapper(require('./controllers/comment').post));
 
+    apiRouter.get('/comment/:id',
+        // authPrivate,
+        api.wrapper(require('./controllers/comment').get));
+    apiRouter.put('/comment/:id',
+        authPrivate,
+        api.wrapper(require('./controllers/comment').update));
+    apiRouter.delete('/comment/:id',
+        authPrivate,
+        api.wrapper(require('./controllers/comment').delete));
+
     apiRouter.get('/user/comments',
         authPrivate,
         api.wrapper(require('./controllers/comment').getAllMyComments));
