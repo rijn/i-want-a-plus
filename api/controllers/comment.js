@@ -7,7 +7,14 @@ const { ServerError } = require('../middleware/error-handler');
 exports.get = (options) => {
     // get comment / user / course through options.id
     let tasks = [
-        // todo
+      (options) => {
+          return sequelize.query(`SELECT Comments.content,Users.email
+          FROM Comments, Users
+          WHERE Comments.id=Users.id and UserId=${options.id}`).then(
+            (result) => {
+              return result[0][0];
+            });
+      }
     ];
 
     return pipeline(tasks, options);
