@@ -1,5 +1,6 @@
+const _ = require('lodash');
 const utils = require('../utils');
-const { pipeline, pick } = utils;
+const { pipeline, pick, deserialize } = utils;
 const { User, Comment, sequelize } = require('../../models');
 const { ServerError } = require('../middleware/error-handler');
 
@@ -86,6 +87,25 @@ exports.getAllMyComments = (options) => {
             console.log(options);
             return options.mw.user.getComments();
         }
+    ];
+
+    return pipeline(tasks, options);
+}
+
+exports.getCommentsOfCourse = (options) => {
+    let tasks = [
+        (options) => {
+            return sequelize.query(`SELECT
+                    Comments.id, Comments.content, Comments.createdAt, Comments.updatedAt,
+                    Users.id as user_id, Users.email as user_email,
+                    Courses.
+                FROM Users, Courses, Comments
+                WHERE Users.id = Comments.UserId
+                    AND Courses.id = Comments.CourseId
+                    AND Courses.id = ${options.id}`);
+        },
+        data => _.get(data, '0.0'),
+        deserialize
     ];
 
     return pipeline(tasks, options);

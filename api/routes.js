@@ -40,6 +40,8 @@ module.exports = function apiRoutes () {
     apiRouter.delete('/comment/:id',
         authPrivate,
         api.wrapper(require('./controllers/comment').delete));
+    apiRouter.get('/course/:id/comments',
+        api.wrapper(require('./controllers/comment').getCommentsOfCourse));
 
     apiRouter.get('/user/comments',
         authPrivate,
