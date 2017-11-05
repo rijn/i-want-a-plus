@@ -39,33 +39,27 @@ let checkUserAndComment = (CommentId, UserId) => {
                                         console.log('BBBBB');
                                         throw ServerError({ message: "Not your comment", statusCode: 409 });
                                     }
-                                    return true;
+                                    return;
                                 });
 }
 
 exports.update = (object, options) => {
     // update comment through id
     // object.content
-    //let tasks = [
-    //    (options) => {
-    //        return checkUserAndComment(commentId, userId).then((result) => {
-    //            if (result.count == 1) {
-    //                return options;
-    //            } else {
-    //                throw ServerError({ message: "", statusCode: 409 });
-    //            }
-    //        })
-    //    },
+    let tasks = [
+        (options) => {
+            return checkUserAndComment(options.id, options.mw.user.id);
+        }
     //    (options) => {
     //        ....
     //    }
-    //];
+    ];
 
     console.log(object, options, options.mw.user.id);
 
     console.log("AAAAA");
 
-    console.log(checkUserAndComment(options.id, options.mw.user.id));
+    // console.log(checkUserAndComment(options.id, options.mw.user.id));
 
 
 
