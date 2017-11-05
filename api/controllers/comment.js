@@ -52,24 +52,25 @@ let checkUserAndComment = (CommentId, UserId) => {
 exports.update = (object, options) => {
     // update comment through id
     // object.content
+
+    console.log("This is Object");
+    console.log(object);
+
     let tasks = [
-        (options) => {
+        () => {
             return checkUserAndComment(options.id, options.mw.user.id);
         },
-    //    (options) => {
-    //        ....
-    //    }
+        () => {
+            return sequelize.query(`UPDATE Comments
+                            SET content = \'${object.content}\'
+                            WHERE Comments.id = ${options.id}`)
+            .then((result) => {
+                return "Update Success";
+            });
+        }
     ];
 
-    console.log(object, options, options.mw.user.id);
-
-    console.log("AAAAA");
-
-    // console.log(checkUserAndComment(options.id, options.mw.user.id));
-
-
-
-    return pipeline(tasks, options);
+    return pipeline(tasks);
 };
 
 exports.delete = (options) => {
