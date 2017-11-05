@@ -97,8 +97,7 @@ exports.getCommentsOfCourse = (options) => {
         (options) => {
             return sequelize.query(`SELECT
                     Comments.id, Comments.content, Comments.createdAt, Comments.updatedAt,
-                    Users.id as user_id, Users.email as user_email,
-                    Courses.
+                    Users.id as user_id, Users.email as user_email
                 FROM Users, Courses, Comments
                 WHERE Users.id = Comments.UserId
                     AND Courses.id = Comments.CourseId
