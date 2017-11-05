@@ -27,5 +27,14 @@ module.exports = function apiRoutes () {
     apiRouter.get('/course',
         api.wrapper(require('./controllers/course').get));
 
+    apiRouter.post('/comment',
+        authPrivate,
+        api.wrapper(require('./controllers/comment').post));
+
+    apiRouter.get('/user/comments',
+        authPrivate,
+        api.wrapper(require('./controllers/comment').getAllMyComments));
+
     return apiRouter;
 };
+1
