@@ -1,6 +1,7 @@
 const utils = require('../utils');
 const { pipeline, pick } = utils;
 const { User, Comment } = require('../../models');
+const { ServerError } = require('../middleware/error-handler');
 
 exports.get = (options) => {
     // get comment / user / course through options.id
