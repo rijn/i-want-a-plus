@@ -33,11 +33,10 @@ let checkUserAndComment = (CommentId, UserId) => {
                             WHERE Comments.UserId = Users.id
                                 and Comments.UserId = ${UserId}
                                 and Comments.id = ${CommentId}`).then((result) => {
-                                    console.log(result);
-                                    //console.log(result[0][0].quant);
+
                                     if (result[0][0].quant == 0){
                                         console.log('BBBBB');
-                                        throw ServerError({ message: "Not your comment", statusCode: 409 });
+                                        throw ServerError({ message: "Not your comment", statusCode: 400 });
                                     }
                                     return;
                                 });
@@ -49,7 +48,7 @@ exports.update = (object, options) => {
     let tasks = [
         (options) => {
             return checkUserAndComment(options.id, options.mw.user.id);
-        }
+        },
     //    (options) => {
     //        ....
     //    }
@@ -70,6 +69,13 @@ exports.delete = (options) => {
     // delete comment through id
     let tasks = [
         // todo
+        (options) => {
+            return checkUserAndComment(options.id, options.mw.user.id);
+        },
+        () =>{
+            return sequelize.query(`DELETE FROM Comments WHERE Comments.id = ${options.id}`)
+        }
+
     ];
 
     return pipeline(tasks, options);
