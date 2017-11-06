@@ -7,7 +7,14 @@ const { ServerError } = require('../middleware/error-handler');
 exports.get = (options) => {
     // get comment / user / course through options.id
     let tasks = [
-        // todo
+      (options) => {
+          return sequelize.query(`SELECT Comments.content,Users.email
+          FROM Comments, Users
+          WHERE Comments.id=Users.id and UserId=${options.id}`).then(
+            (result) => {
+              return result[0][0];
+            });
+      }
     ];
 
     return pipeline(tasks, options);
@@ -33,11 +40,10 @@ let checkUserAndComment = (CommentId, UserId) => {
                             WHERE Comments.UserId = Users.id
                                 and Comments.UserId = ${UserId}
                                 and Comments.id = ${CommentId}`).then((result) => {
-                                    console.log(result);
-                                    //console.log(result[0][0].quant);
+
                                     if (result[0][0].quant == 0){
                                         console.log('BBBBB');
-                                        throw ServerError({ message: "Not your comment", statusCode: 409 });
+                                        throw ServerError({ message: "Not your comment", statusCode: 400 });
                                     }
                                     return;
                                 });
@@ -46,30 +52,38 @@ let checkUserAndComment = (CommentId, UserId) => {
 exports.update = (object, options) => {
     // update comment through id
     // object.content
+
+    console.log("This is Object");
+    console.log(object);
+
     let tasks = [
-        (options) => {
+        () => {
             return checkUserAndComment(options.id, options.mw.user.id);
+        },
+        () => {
+            return sequelize.query(`UPDATE Comments
+                            SET content = \'${object.content}\'
+                            WHERE Comments.id = ${options.id}`)
+            .then((result) => {
+                return "Update Success";
+            });
         }
-    //    (options) => {
-    //        ....
-    //    }
     ];
 
-    console.log(object, options, options.mw.user.id);
-
-    console.log("AAAAA");
-
-    // console.log(checkUserAndComment(options.id, options.mw.user.id));
-
-
-
-    return pipeline(tasks, options);
+    return pipeline(tasks);
 };
 
 exports.delete = (options) => {
     // delete comment through id
     let tasks = [
         // todo
+        (options) => {
+            return checkUserAndComment(options.id, options.mw.user.id);
+        },
+        () =>{
+            return sequelize.query(`DELETE FROM Comments WHERE Comments.id = ${options.id}`)
+        }
+
     ];
 
     return pipeline(tasks, options);
