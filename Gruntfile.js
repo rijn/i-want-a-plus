@@ -29,6 +29,9 @@ module.exports = function (grunt) {
             },
             restartTest: {
                 command: 'pm2 restart i-want-a-plus'
+            },
+            buildTheme: {
+                command: 'node_modules/.bin/et -c element-variables.scss -o src/styles/theme'
             }
         },
         apidoc: {
