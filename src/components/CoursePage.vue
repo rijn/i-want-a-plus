@@ -17,7 +17,7 @@
                     </template>
                 </el-autocomplete>
             </div>
-            <div>
+            <div class="inline padding">
                 <el-select v-model="sortSelectValue" size="mini" placeholder="Default sort" class="comp">
                     <el-option-group
                         v-for="group in sortOption"
@@ -34,6 +34,20 @@
                         </el-option>
                     </el-option-group>
                 </el-select>
+                <div>
+                    <el-tag
+                        v-for="filter in filters"
+                        :key="filter.value"
+                        size="small"
+                        :type="filter.type"
+                        @close="handleFilterClose(filter)"
+                        closable>
+                        <b>#{{filter.displayKey}}</b> = {{filter.displayValue}}
+                    </el-tag>
+                </div>
+                <div style="float: right;">
+                    <el-button @click="onSearch" size="small">Search</el-button>
+                </div>
             </div>
         </header>
         <div class="container">
@@ -47,9 +61,10 @@
 </template>
 
 <script>
-import { Button, Form, FormItem, Input, Select, Option, Loading, OptionGroup, Autocomplete } from 'element-ui';
+import { Button, Form, FormItem, Input, Select, Option, Loading, OptionGroup, Autocomplete, Tag } from 'element-ui';
 import CourseSummary from './CourseSummary';
 import _ from 'lodash';
+import { SubjectMapBlurSearch, SubjectMapForward } from './subject';
 // import { mapGetters, mapActions } from 'vuex';
 
 export default {
@@ -64,6 +79,7 @@ export default {
         'el-option': Option,
         'el-option-group': OptionGroup,
         'el-autocomplete': Autocomplete,
+        'el-tag': Tag,
         CourseSummary
     },
 
@@ -92,9 +108,29 @@ export default {
             }],
             filterMap: {
                 course: {
-                    displayKey: 'Course Number'
+                    key: 'course',
+                    displayKey: 'Course Number',
+                    type: 'default',
+                    query: (v) => _.toNumber(v) && [_.assign(_.cloneDeep(this.filterMap.course), {
+                        displayValue: v,
+                        value: '#course=' + v
+                    })],
+                    remapDisplayValue: (dv) => dv
+                },
+                subject: {
+                    key: 'subject',
+                    displayKey: 'Subject',
+                    type: 'success',
+                    query: (v) => _.map(SubjectMapBlurSearch(v), ({ value, key }) => {
+                        return _.assign(_.cloneDeep(this.filterMap.subject), {
+                            displayValue: value,
+                            value: '#subject=' + key
+                        });
+                    }),
+                    remapDisplayValue: (dv) => _.get(SubjectMapForward(dv), 'value')
                 }
             },
+            filters: [],
             sortSelectValue: null
         };
     },
@@ -109,43 +145,50 @@ export default {
         closeLoadingInstance () {
             this.loadingInstance && this.loadingInstance.close();
         },
-        querySearch (queryString, cb) {
-            console.log(queryString, _.isNumber(queryString));
-            let poss = [];
-            if (_.toNumber(queryString)) {
-                poss.push(_.assign(this.filterMap.course, {
-                    displayValue: queryString,
-                    value: '#course=' + queryString
-                }));
+        querySearch (v, cb) {
+            if (_.isEmpty(v)) {
+                // eslint-disable-next-line
+                cb([]);
+                return;
             }
             // eslint-disable-next-line
-            cb(poss);
+            cb(_.compact(_.reduce(this.filterMap, (collection, { query }) => _.concat(collection, query(v)), [])));
+        },
+        handleFilterClose (filter) {
+            this.filters.splice(this.filters.indexOf(filter), 1);
         },
         handleSelect ({ value }) {
-            console.log(value);
             if (_.startsWith(value, '#')) {
-                value = _.drop(value, 1);
-                [ key, value ] = _.split(value, '=');
-                console.log(key, value);
+                let [ key, v ] = _.split(value.replace('#', ''), '=');
                 if (_.has(this.filterMap, key)) {
-                    console.log(this.filterMap[key]);
+                    this.filters.push(_.assign(_.cloneDeep(this.filterMap[key]), {
+                        value: v,
+                        displayValue: this.filterMap[key].remapDisplayValue(v)
+                    }));
+                    value = null;
+                    this.searchInputValue = '';
                 }
             }
-            if (_.isString(value)) {
-                this.searchInputValue = value;
-                this.onSearch();
-            }
+            this.searchInputValue = value;
         },
         onSearch () {
-            if (!this.searchInputValue) {
+            if (!this.searchInputValue && !this.filters.length) {
                 this.courses = [];
                 return;
             }
             this.createLoadingInstance();
-            this.$api.course.search(_.assign({
-                title: this.searchInputValue,
-                group: 'subject,course'
-            }, this.sortSelectValue && { order: this.sortSelectValue })).then(res => {
+            this.$api.course.search(_.assign(
+                {
+                    group: 'subject,course,title'
+                },
+                this.searchInputValue && { title: this.searchInputValue },
+                this.sortSelectValue && { order: this.sortSelectValue },
+                _.reduce(this.filters, (result, { key, value }) => {
+                    if (!_.has(result, key)) result[key] = value;
+                    else result[key] += ',' + value;
+                    return result;
+                }, {})
+            )).then(res => {
                 this.closeLoadingInstance();
                 this.courses = res.body;
             });
@@ -153,7 +196,8 @@ export default {
     },
 
     watch: {
-        sortSelectValue: function () { this.onSearch(); }
+        sortSelectValue: function () { this.onSearch(); },
+        filters: function () { this.onSearch(); }
     },
 
     mounted () {

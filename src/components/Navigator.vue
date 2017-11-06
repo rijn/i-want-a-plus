@@ -82,10 +82,6 @@ export default {
     },
 
     mounted () {
-        console.log(this.$api.version);
-        this.$api.version.get().then(r => {
-            this.response = r.body;
-        });
     }
 };
 </script>

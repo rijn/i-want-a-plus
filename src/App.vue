@@ -117,4 +117,15 @@ ul, li {
         }
     }
 }
+
+.inline > * {
+    display: inline-block;
+}
+.inline.padding > *:not(:last-child) {
+    padding-right: 0.5rem;
+}
+
+.el-tag + .el-tag {
+    margin-left: 0.3rem;
+}
 </style>

@@ -31,7 +31,9 @@ exports.get = (options) => {
             return models.Course.findAll(_.assign({
                 attributes: timeFieldToExclude,
                 where: { deletedAt: null },
-                where: _.pick(_.omit(options, addiField), _.keys(models.Course.rawAttributes)),
+                where: _.map(_.pick(_.omit(options, addiField), _.keys(models.Course.rawAttributes)), (value, key) => ({
+                    [Op.or]: _.map(_.split(value, ','), v => _.set({}, key, v))
+                })),
                 include: [
                     generateModel(models.School, 'Schools', options),
                     generateModel(models.PastCourse, 'PastCourses', options),
