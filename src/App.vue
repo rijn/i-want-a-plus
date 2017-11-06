@@ -15,7 +15,19 @@ import Navigator from './components/Navigator';
 export default {
     name: 'app',
 
-    components: { Navigator }
+    components: { Navigator },
+
+    mounted () {
+        if (window.devicePixelRatio && devicePixelRatio >= 2) {
+            var testElem = document.createElement('div');
+            testElem.style.border = '.5px solid transparent';
+            document.body.appendChild(testElem);
+            if (testElem.offsetHeight === 1) {
+                document.querySelector('html').classList.add('hairlines');
+            }
+            document.body.removeChild(testElem);
+        }
+    }
 };
 </script>
 
@@ -46,6 +58,10 @@ html, body {
 
 // Override
 
+.long {
+    width: 100%;
+}
+
 button {
     border: 0 !important;
     transition: background .1s ease-in-out, color .1s ease-in-out, box-shadow .1s ease-in-out;
@@ -55,10 +71,10 @@ button {
         background: 0;
         box-shadow: 0 0 0 0.5px rgba(0,0,0,.16), 0 2px 10px rgba(0,0,0,.1);
     }
+}
 
-    &.long {
-        width: 100%;
-    }
+.hairlines input {
+    border-width: 0.5px;
 }
 
 input:not(:focus) {
@@ -70,6 +86,10 @@ input:not(:focus) {
 }
 input:focus {
     box-shadow: 0 0 0 0.5px rgba(0,0,0,.16), 0 2px 10px rgba(0,0,0,.1);
+}
+
+.el-input {
+    padding: 2px;
 }
 
 .el-message {
@@ -85,8 +105,9 @@ ul, li {
 .full-list {
     li {
         padding: 10px;
-        &:not(:first-child) {
-            box-shadow: inset 0 0.5px 0 rgba(0,0,0,.15);
+        // &:not(:first-child) {
+        & {
+            box-shadow: inset 0 -0.5px 0 rgba(0,0,0,.15);
         }
         cursor: pointer;
         transition: background .1s ease-in-out, color .1s ease-in-out, box-shadow .1s ease-in-out;

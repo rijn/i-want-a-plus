@@ -47,6 +47,16 @@ module.exports = function apiRoutes () {
         authPrivate,
         api.wrapper(require('./controllers/comment').getAllMyComments));
 
+    apiRouter.post('/notification',
+        authPrivate,
+        api.wrapper(() => {}));
+    apiRouter.delete('/notification/:id',
+        authPrivate,
+        api.wrapper(() => {}));
+    apiRouter.get('/user/notifications',
+        authPrivate,
+        api.wrapper(() => {}));
+
     return apiRouter;
 };
 1
