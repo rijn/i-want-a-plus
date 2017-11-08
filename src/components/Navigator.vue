@@ -1,5 +1,5 @@
 <template>
-    <aside>
+    <div class="aside">
         <header>
             <router-link :to="{ path: '/' }" class="nav-link" active-class="active">
                 <div class="wrap">
@@ -28,7 +28,7 @@
             </section>
             <!-- About -->
         </footer>
-    </aside>
+    </div>
 </template>
 
 <script>
@@ -87,13 +87,13 @@ export default {
 </script>
 
 <style lang="less" scoped>
-aside {
-    position: absolute;
-    top: 0;
-    bottom: 0;
+.aside {
+    // position: absolute;
+    // top: 0;
+    // bottom: 0;
 
-    left: 0;
-    width: 270px;
+    // left: 0;
+    // width: 270px;
     background-image: linear-gradient(180deg,#f8f5f2,#f7f5f4 18%,#f1f3f5 35%,#f7f5f0 68%,#f6f6f8);
     box-shadow: inset -1px 0 0 rgba(0,0,0,.1);
     z-index: 10;
@@ -105,6 +105,8 @@ aside {
     box-shadow: inset -0.5px 0 0 rgba(0,0,0,.15);
     background: #f6f6f6;
     transform: translateX(0)!important;
+
+    height: 100%;
 
     a {
         text-decoration: none;
