@@ -3,7 +3,7 @@
 'use strict';
 
 module.exports = (sequelize, DataTypes) => {
-    var CurrentCourse = sequelize.define('CurrentCourse', {
+    var CurrentSection = sequelize.define('CurrentSection', {
         availableSlot: {
             type: DataTypes.INTEGER,
             allowNull: false,
@@ -15,8 +15,8 @@ module.exports = (sequelize, DataTypes) => {
         setterMethods: {}
     });
 
-    CurrentCourse.associate = models => {
+    CurrentSection.associate = models => {
     };
 
-    return CurrentCourse;
+    return CurrentSection;
 };

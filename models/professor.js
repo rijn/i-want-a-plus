@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
 
     Professor.associate = models => {
         Professor.belongsTo(models.School);
-        Professor.belongsToMany(models.Course, {
+        Professor.belongsToMany(models.Section, {
             through: {
                 model: models.Teach,
                 unique: false

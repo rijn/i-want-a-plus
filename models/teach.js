@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             unique: 'teach'
         },
-        CourseId: {
+        SectionId: {
             type: DataTypes.INTEGER,
             allowNull: false,
             unique: 'teach'

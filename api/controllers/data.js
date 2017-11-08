@@ -32,26 +32,40 @@ exports.updateCsv = (options) => {
         },
         (data) => {
             return Promise.each(data, item => {
-                let professor, course;
+                let professor, course, section;
                 return models.Professor.findOrCreate({
                     where: extractName(item.professor)
                 }).then(_professor => {
                     professor = _professor[0];
                 }).then(() => {
                     return models.Course.findOrCreate({
-                        where: _.pick(item, [ 'year', 'term', 'crn' ]),
-                        defaults: _.assign({},
-                            _.pick(item, _.keys(models.Course.rawAttributes)),
-                            { PastCourse: _.pick(item, _.keys(models.PastCourse.rawAttributes)) }
-                        ),
-                        include: [ models.PastCourse ]
+                        where: _.pick(item, [ 'subject', 'course' ]),
+                        defaults: { title: item.title }
                     });
                 }).then(_course => {
                     course = _course[0];
                 }).then(() => {
+                    return models.Section.findOrCreate({
+                        where: _.pick(item, [ 'year', 'term', 'crn' ]),
+                        defaults: _.assign({},
+                            _.pick(item, _.keys(models.Section.rawAttributes)),
+                            { CourseId: course.id }
+                        ),
+                        include: [ models.Course, models.PastSection ]
+                    });
+                }).then(_section => {
+                    section = _section[0];
+                    if (!section.PastSectionId) {
+                        return models.PastSection.create(_.pick(item, _.keys(models.PastSection.rawAttributes)));
+                    }
+                }).then(newPastSection => {
+                    if (newPastSection) {
+                        return section.update({ PastSectionId: newPastSection.id });
+                    }
+                }).then(() => {
                     return models.Teach.findOrCreate({
                         where: {
-                            CourseId: course.id,
+                            SectionId: section.id,
                             ProfessorId: professor.id
                         }
                     });
