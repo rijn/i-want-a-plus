@@ -20,6 +20,10 @@ export default new Router({
         path: '/course',
         name: 'Course',
         component: CoursePage
+    }, {
+        path: '/course/:courseId',
+        name: 'CourseDetail',
+        component: CoursePage
     }],
     scrollBehavior (to, from, savedPosition) {
         if (savedPosition) {

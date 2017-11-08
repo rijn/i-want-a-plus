@@ -13,7 +13,6 @@ export default class Resource {
 
     static install (Vue, options) {
         this.models = {
-            version: Vue.resource('test'),
             user: Vue.resource('user{/id}', {}, {
                 login: { method: 'POST', url: 'user/login' }
             }),

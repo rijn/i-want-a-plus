@@ -5,7 +5,7 @@
 const _ = require('lodash');
 
 module.exports = (sequelize, DataTypes) => {
-    var PastCourse = sequelize.define('PastCourse', {
+    var PastSection = sequelize.define('PastSection', {
         ap: {
             type: DataTypes.INTEGER,
             allowNull: false,
@@ -79,20 +79,26 @@ module.exports = (sequelize, DataTypes) => {
         averageGpa: {
             type: DataTypes.FLOAT,
             defaultValue: 0
+        },
+        totalStudentCount: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0
         }
     }, {
         paranoid: true,
         getterMethods: {},
         setterMethods: {},
         hooks: {
-            beforeCreate: (pastCourse, options) => {
-                pastCourse.averageGpa = require('./utils').calculateAvgGpa(pastCourse);
+            beforeCreate: (pastSection, options) => {
+                pastSection.averageGpa = require('./utils').calculateAvgGpa(pastSection);
+                pastSection.totalStudentCount = require('./utils').calculateTotalStudent(pastSection);
             }
         }
     });
 
-    PastCourse.associate = models => {
+    PastSection.associate = models => {
+        PastSection.hasOne(models.Section);
     };
 
-    return PastCourse;
+    return PastSection;
 };

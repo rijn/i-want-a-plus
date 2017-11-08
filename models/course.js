@@ -4,39 +4,27 @@
 
 module.exports = (sequelize, DataTypes) => {
     var Course = sequelize.define('Course', {
-        year: {
-            type: DataTypes.INTEGER,
-            unique: 'uniqueCourse'
-        },
-        term: {
-            type: DataTypes.STRING,
-            validate: {
-                isIn: [ [ 'Fall', 'Spring', 'Summer' ] ]
-            },
-            unique: 'uniqueCourse'
-        },
-        crn: {
-            type: DataTypes.STRING(5),
-            allowNull: false,
-            // validate: {
-            //     is: ['^\d{5}$', 'i']
-            // },
-            unique: 'uniqueCourse'
-        },
         subject: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
+            unique: 'uniqueCourse'
         },
         course: {
             type: DataTypes.INTEGER,
-            allowNull: false
+            allowNull: false,
+            unique: 'uniqueCourse'
         },
         title: {
             type: DataTypes.STRING,
             allowNull: false
         },
-        section: {
-            type: DataTypes.STRING
+        averageGpa: {
+            type: DataTypes.FLOAT,
+            defaultValue: 0
+        },
+        totalStudentCount: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0
         }
     }, {
         paranoid: true,
@@ -45,27 +33,10 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     Course.associate = models => {
-        Course.belongsTo(models.CurrentCourse, { constraint: false });
-        Course.belongsTo(models.PastCourse, { constraint: false });
         Course.belongsTo(models.School);
-        Course.belongsToMany(models.Professor, {
-            through: {
-                model: models.Teach,
-                unique: false
-            },
-            foreignKey: 'CourseId'
-        });
+        Course.hasMany(models.Section);
         Course.hasMany(models.Comment);
-        Course.belongsToMany(models.User, {
-            through: {
-                model: models.Notify,
-                unique: false
-            },
-            foreignKey: 'CourseId'
-        });
     }
-
-
 
     return Course;
 };

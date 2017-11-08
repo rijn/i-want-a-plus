@@ -1,21 +1,28 @@
 <template>
-    <div id="app">
-        <Navigator></Navigator>
-        <section id="core">
+
+    <el-container id="app">
+        <el-aside width="270px"><Navigator /></el-aside>
+        <el-main class="core">
             <transition name="el-fade-in-linear">
                 <router-view></router-view>
             </transition>
-        </section>
-    </div>
+        </el-main>
+    </el-container>
 </template>
 
 <script>
 import Navigator from './components/Navigator';
+import { Container, Aside, Main } from 'element-ui';
 
 export default {
     name: 'app',
 
-    components: { Navigator },
+    components: {
+        'el-container': Container,
+        'el-aside': Aside,
+        'el-main': Main,
+        Navigator
+    },
 
     mounted () {
         if (window.devicePixelRatio && devicePixelRatio >= 2) {
@@ -38,23 +45,35 @@ html, body {
     font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
 }
 
-#core {
-    background: #fff;
-    transition: left .3s ease-in-out;
-
-    max-width: 100%;
-    background: #fefefe;
-    left: 270px;
-    right: 0;
-    display: flex;
-    flex-direction: column;
-    will-change: left,right;
-
+#app {
     position: absolute;
     top: 0;
+    left: 0;
+    right: 0;
     bottom: 0;
-    transition: left .3s ease-in-out,right .3s ease-in-out,max-width .3s ease-in-out,width .3s ease-in-out,box-shadow .3s ease-in-out;
 }
+
+.core {
+    padding: 0;
+}
+
+// #core {
+//     background: #fff;
+//     transition: left .3s ease-in-out;
+
+//     max-width: 100%;
+//     background: #fefefe;
+//     left: 270px;
+//     right: 0;
+//     display: flex;
+//     flex-direction: column;
+//     will-change: left,right;
+
+//     position: absolute;
+//     top: 0;
+//     bottom: 0;
+//     transition: left .3s ease-in-out,right .3s ease-in-out,max-width .3s ease-in-out,width .3s ease-in-out,box-shadow .3s ease-in-out;
+// }
 
 // Override
 
@@ -116,5 +135,16 @@ ul, li {
             box-shadow: 0 0 0 0.5px rgba(0,0,0,.16), 0 2px 10px rgba(0,0,0,.1);
         }
     }
+}
+
+.inline > * {
+    display: inline-block;
+}
+.inline.padding > *:not(:last-child) {
+    padding-right: 0.5rem;
+}
+
+.el-tag + .el-tag {
+    margin-left: 0.3rem;
 }
 </style>

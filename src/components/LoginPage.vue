@@ -1,5 +1,5 @@
 <template>
-    <div class="wrap">
+    <section class="wrap">
         <div class="container">
             <div class="logo">
                 <h1>iWantA+</h1>
@@ -17,7 +17,7 @@
                 </el-form-item>
             </el-form>
         </div>
-    </div>
+    </section>
 </template>
 
 <script>
@@ -81,7 +81,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-div.wrap {
+section.wrap {
     flex: 1;
     display: flex;
     align-items: center;
@@ -90,6 +90,8 @@ div.wrap {
     overflow-y: auto;
     overflow-y: overlay;
     text-align: center;
+
+    height: 100%;
 
     .container {
         width: 300px;

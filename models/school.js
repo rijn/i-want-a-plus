@@ -14,5 +14,10 @@ module.exports = (sequelize, DataTypes) => {
         setterMethods: {}
     });
 
+    School.associate = models => {
+        School.hasMany(models.Professor);
+        School.hasMany(models.Course);
+    };
+
     return School;
 };

@@ -23,6 +23,12 @@ Object.keys(db).forEach(modelName => {
     }
 });
 
+Object.keys(db).forEach(modelName => {
+    if ('hookFn' in db[modelName]) {
+        db[modelName].hookFn(db);
+    }
+});
+
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 db.utils = require('./utils');

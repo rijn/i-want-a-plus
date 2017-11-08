@@ -1,55 +1,79 @@
 <template>
-    <section class="wrap">
-        <header ref="courseHeader">
-            <div>
-                <el-autocomplete
-                    class="comp long inline-input"
-                    v-model="searchInputValue"
-                    :fetch-suggestions="querySearch"
-                    placeholder="Search for course"
-                    @select="handleSelect"
-                    :select-when-unmatched="true">
-                    <i slot="prefix"
-                        class="el-input__icon el-icon-search"></i>
-                    <template slot-scope="props">
-                        <b># <span class="key">{{ props.item.displayKey }}</span></b> =
-                        <span class="name">{{ props.item.displayValue }}</span>
-                    </template>
-                </el-autocomplete>
-            </div>
-            <div>
-                <el-select v-model="sortSelectValue" size="mini" placeholder="Default sort" class="comp">
-                    <el-option-group
-                        v-for="group in sortOption"
-                        :key="group.label"
-                        :label="group.label">
-                        <el-option
-                            v-for="item in group.options"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                            <i class="icon" :class="[ item.icon ]"
-                                style="float: right; color: #8492a6; font-size: 13px"></i>
-                            <span style="float: left;">{{ item.insetLabel }}</span>
-                        </el-option>
-                    </el-option-group>
-                </el-select>
-            </div>
-        </header>
-        <div class="container">
-            <ul class="full-list">
-                <li v-for="course in courses" :key="course.id" class="clickable">
-                    <CourseSummary :course="course" />
-                </li>
-            </ul>
-        </div>
-    </section>
+    <el-container class="wrap">
+        <el-container>
+            <el-header ref="courseHeader" height="auto">
+                <div>
+                    <el-autocomplete
+                        class="comp long inline-input"
+                        v-model="searchInputValue"
+                        :fetch-suggestions="querySearch"
+                        placeholder="Search for course"
+                        @select="handleSelect"
+                        :select-when-unmatched="true">
+                        <i slot="prefix"
+                            class="el-input__icon el-icon-search"></i>
+                        <template slot-scope="props">
+                            <b># <span class="key">{{ props.item.displayKey }}</span></b> =
+                            <span class="name">{{ props.item.displayValue }}</span>
+                        </template>
+                    </el-autocomplete>
+                </div>
+                <div class="inline padding">
+                    <el-select v-model="sortSelectValue" size="mini" placeholder="Default sort" class="comp">
+                        <el-option-group
+                            v-for="group in sortOption"
+                            :key="group.label"
+                            :label="group.label">
+                            <el-option
+                                v-for="item in group.options"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                                <i class="icon" :class="[ item.icon ]"
+                                    style="float: right; color: #8492a6; font-size: 13px"></i>
+                                <span style="float: left;">{{ item.insetLabel }}</span>
+                            </el-option>
+                        </el-option-group>
+                    </el-select>
+                    <div>
+                        <el-tag
+                            v-for="filter in filters"
+                            :key="filter.value"
+                            size="small"
+                            :type="filter.type"
+                            @close="handleFilterClose(filter)"
+                            closable>
+                            <b>#{{filter.displayKey}}</b> = {{filter.displayValue}}
+                        </el-tag>
+                    </div>
+                    <div style="float: right;">
+                        <el-button @click="onSearch" size="small">Search</el-button>
+                    </div>
+                </div>
+            </el-header>
+            <el-main class="container">
+                <ul class="full-list">
+                    <li v-for="course in courses" :key="course.id" class="clickable" @click="handleClickCourse(course.id)">
+                        {{ course }}
+                        <CourseSummary :course="course"></CourseSummary>
+                    </li>
+                </ul>
+            </el-main>
+        </el-container>
+        <el-container v-if="$route.params.courseId">
+            {{ $route.params }}
+        </el-container>
+    </el-container>
 </template>
 
 <script>
-import { Button, Form, FormItem, Input, Select, Option, Loading, OptionGroup, Autocomplete } from 'element-ui';
+import {
+    Button, Form, FormItem, Input, Select, Option, Loading, OptionGroup, Autocomplete, Tag,
+    Container, Aside, Main, Header
+} from 'element-ui';
 import CourseSummary from './CourseSummary';
 import _ from 'lodash';
+import { SubjectMapBlurSearch, SubjectMapForward } from './subject';
 // import { mapGetters, mapActions } from 'vuex';
 
 export default {
@@ -64,6 +88,11 @@ export default {
         'el-option': Option,
         'el-option-group': OptionGroup,
         'el-autocomplete': Autocomplete,
+        'el-tag': Tag,
+        'el-container': Container,
+        'el-aside': Aside,
+        'el-main': Main,
+        'el-header': Header,
         CourseSummary
     },
 
@@ -92,68 +121,104 @@ export default {
             }],
             filterMap: {
                 course: {
-                    displayKey: 'Course Number'
+                    key: 'course',
+                    displayKey: 'Course Number',
+                    type: 'default',
+                    query: (v) => _.toNumber(v) && [_.assign(_.cloneDeep(this.filterMap.course), {
+                        displayValue: v,
+                        value: '#course=' + v
+                    })],
+                    remapDisplayValue: (dv) => dv
+                },
+                subject: {
+                    key: 'subject',
+                    displayKey: 'Subject',
+                    type: 'success',
+                    query: (v) => _.map(SubjectMapBlurSearch(v), ({ value, key }) => {
+                        return _.assign(_.cloneDeep(this.filterMap.subject), {
+                            displayValue: value,
+                            value: '#subject=' + key
+                        });
+                    }),
+                    remapDisplayValue: (dv) => _.get(SubjectMapForward(dv), 'value')
                 }
             },
+            filters: [],
             sortSelectValue: null
         };
     },
 
     methods: {
         createLoadingInstance () {
+            console.log(this.$refs);
             this.loadingInstance = Loading.service({
-                target: this.$refs.courseHeader,
+                target: this.$refs.courseHeader.$el,
                 background: 'rgba(255, 255, 255, 0.8)'
             });
         },
         closeLoadingInstance () {
             this.loadingInstance && this.loadingInstance.close();
         },
-        querySearch (queryString, cb) {
-            console.log(queryString, _.isNumber(queryString));
-            let poss = [];
-            if (_.toNumber(queryString)) {
-                poss.push(_.assign(this.filterMap.course, {
-                    displayValue: queryString,
-                    value: '#course=' + queryString
-                }));
+        querySearch (v, cb) {
+            if (_.isEmpty(v)) {
+                // eslint-disable-next-line
+                cb([]);
+                return;
             }
             // eslint-disable-next-line
-            cb(poss);
+            cb(_.compact(_.reduce(this.filterMap, (collection, { query }) => _.concat(collection, query(v)), [])));
+        },
+        handleFilterClose (filter) {
+            this.filters.splice(this.filters.indexOf(filter), 1);
         },
         handleSelect ({ value }) {
-            console.log(value);
             if (_.startsWith(value, '#')) {
-                value = _.drop(value, 1);
-                [ key, value ] = _.split(value, '=');
-                console.log(key, value);
+                let [ key, v ] = _.split(value.replace('#', ''), '=');
                 if (_.has(this.filterMap, key)) {
-                    console.log(this.filterMap[key]);
+                    this.filters.push(_.assign(_.cloneDeep(this.filterMap[key]), {
+                        value: v,
+                        displayValue: this.filterMap[key].remapDisplayValue(v)
+                    }));
+                    value = null;
+                    this.searchInputValue = '';
+                    return;
                 }
             }
-            if (_.isString(value)) {
-                this.searchInputValue = value;
-                this.onSearch();
-            }
+            this.searchInputValue = value;
+            this.onSearch();
         },
         onSearch () {
-            if (!this.searchInputValue) {
+            if (!this.searchInputValue && !this.filters.length) {
                 this.courses = [];
                 return;
             }
+            console.log(this.searchInputValue);
             this.createLoadingInstance();
-            this.$api.course.search(_.assign({
-                title: this.searchInputValue,
-                group: 'subject,course'
-            }, this.sortSelectValue && { order: this.sortSelectValue })).then(res => {
+            this.$api.course.search(_.assign(
+                // {
+                //     group: 'subject,course,title'
+                // },
+                this.searchInputValue && { title: this.searchInputValue },
+                this.sortSelectValue && { order: this.sortSelectValue },
+                _.reduce(this.filters, (result, { key, value }) => {
+                    if (!_.has(result, key)) result[key] = value;
+                    else result[key] += ',' + value;
+                    return result;
+                }, {})
+            )).then(res => {
+                console.log(res);
                 this.closeLoadingInstance();
                 this.courses = res.body;
             });
+        },
+        handleClickCourse (courseId) {
+            this.$router.push({ name: 'CourseDetail', params: { courseId } });
         }
     },
 
     watch: {
-        sortSelectValue: function () { this.onSearch(); }
+        sortSelectValue: function () { this.onSearch(); },
+        filters: function () { this.onSearch(); }
     },
 
     mounted () {
@@ -164,25 +229,11 @@ export default {
 <style lang="less" scoped>
 .wrap {
     background: #fefefe;
-    display: flex;
-    flex-direction: column;
-    will-change: left,right;
-
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
+    height: 100%;
 }
 
 .container {
-    flex: 1;
-    overflow: hidden;
-    overflow-y: auto;
-    overflow-y: overlay;
-    position: relative;
-    z-index: 1;
-    min-height: 40%;
+    padding: 0;
 }
 
 header {
