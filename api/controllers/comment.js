@@ -42,7 +42,7 @@ let checkUserAndComment = (CommentId, UserId) => {
                                 and Comments.id = ${CommentId}`).then((result) => {
 
                                     if (result[0][0].quant == 0){
-                                        console.log('BBBBB');
+                                        //console.log('BBBBB');
                                         throw ServerError({ message: "Not your comment", statusCode: 400 });
                                     }
                                     return;
