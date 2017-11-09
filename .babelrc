@@ -5,6 +5,7 @@
     ],
     "plugins": [
         "transform-runtime",
+        "lodash",
         [
             "component",
             [{

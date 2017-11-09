@@ -150,7 +150,7 @@ export default {
                 return _.assign({
                     x: xData,
                     y: yData,
-                    type: 'markers'
+                    type: 'bar'
                 }, dataSet.name ? { name: dataSet.name } : {});
             });
 
