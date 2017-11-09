@@ -19,7 +19,8 @@
                     </el-autocomplete>
                 </div>
                 <div class="inline padding">
-                    <el-select v-model="sortSelectValue" size="mini" placeholder="Default sort" class="comp">
+                    <el-select v-model="sortSelectValue" size="mini" placeholder="Default sort" class="comp"
+                        :disabled="scatterSwitch">
                         <el-option-group
                             v-for="group in sortOption"
                             :key="group.label"
@@ -47,21 +48,34 @@
                         </el-tag>
                     </div>
                     <div style="float: right;">
-                        <el-button @click="onSearch" size="small">Search</el-button>
+                        <el-switch
+                            v-model="scatterSwitch"
+                            active-text="Plot"
+                            inactive-text="List">
+                        </el-switch>
+                        <!-- <el-button @click="onSearch" size="small">Search</el-button> -->
                     </div>
                 </div>
             </el-header>
-            <el-main class="container">
-                <ul class="full-list">
+            <el-main>
+                <div ref="scatter" v-if="scatterSwitch" :style="{ width: '100%', height: '100%' }">
+                </div>
+                <ul class="full-list" v-else>
                     <li v-for="course in courses" :key="course.id" class="clickable" @click="handleClickCourse(course.id)">
-                        {{ course }}
                         <CourseSummary :course="course"></CourseSummary>
                     </li>
                 </ul>
             </el-main>
         </el-container>
-        <el-container v-if="$route.params.courseId">
-            {{ $route.params }}
+        <el-container class="border left" v-if="$route.params.id">
+            <el-header>
+                <router-link :to="{ name: 'Course' }">
+                    <el-button type="text" icon="el-icon-arrow-left">Collapse</el-button>
+                </router-link>
+            </el-header>
+            <el-main>
+                <router-view></router-view>
+            </el-main>
         </el-container>
     </el-container>
 </template>
@@ -69,11 +83,13 @@
 <script>
 import {
     Button, Form, FormItem, Input, Select, Option, Loading, OptionGroup, Autocomplete, Tag,
-    Container, Aside, Main, Header
+    Container, Aside, Main, Header, Switch
 } from 'element-ui';
 import CourseSummary from './CourseSummary';
 import _ from 'lodash';
+// eslint-disable-next-line
 import { SubjectMapBlurSearch, SubjectMapForward } from './subject';
+import Plotly from 'plotly.js';
 // import { mapGetters, mapActions } from 'vuex';
 
 export default {
@@ -93,6 +109,7 @@ export default {
         'el-aside': Aside,
         'el-main': Main,
         'el-header': Header,
+        'el-switch': Switch,
         CourseSummary
     },
 
@@ -140,11 +157,12 @@ export default {
                             value: '#subject=' + key
                         });
                     }),
-                    remapDisplayValue: (dv) => _.get(SubjectMapForward(dv), 'value')
+                    remapDisplayValue: (dv) => dv // _.get(SubjectMapForward(dv), 'value')
                 }
             },
             filters: [],
-            sortSelectValue: null
+            sortSelectValue: null,
+            scatterSwitch: false
         };
     },
 
@@ -192,7 +210,6 @@ export default {
                 this.courses = [];
                 return;
             }
-            console.log(this.searchInputValue);
             this.createLoadingInstance();
             this.$api.course.search(_.assign(
                 // {
@@ -206,22 +223,87 @@ export default {
                     return result;
                 }, {})
             )).then(res => {
-                console.log(res);
                 this.closeLoadingInstance();
                 this.courses = res.body;
+                this.renderScatter();
+            });
+        },
+        renderScatter () {
+            if (!this.scatterSwitch) return;
+            let data = _.map(_.values(_.groupBy(this.courses, 'subject')), courses => ({
+                mode: 'markers',
+                type: 'scatter',
+                name: courses[0].subject,
+                x: _.map(courses, 'averageGpa'),
+                y: _.map(courses, 'totalStudentCount'),
+                ids: _.map(courses, 'id'),
+                text: _.map(courses, course => `${course.subject} ${course.course}: ${course.title}`),
+                marker: {
+                    sizemode: 'area',
+                    size: _.map(courses, 'totalStudentCount')
+                }
+            }));
+            let layout = {
+                xaxis: {
+                    showgrid: true,
+                    zeroline: true,
+                    showline: true,
+                    mirror: 'ticks',
+                    gridcolor: '#eee',
+                    gridwidth: 0.5,
+                    zerolinecolor: '#eee',
+                    zerolinewidth: 0.5,
+                    linecolor: '#eee',
+                    linewidth: 0.5,
+                    title: 'Average GPA',
+                    rangemode: 'nonnegative'
+                    // range: [0, 4]
+                },
+                yaxis: {
+                    showgrid: true,
+                    zeroline: true,
+                    showline: true,
+                    mirror: 'ticks',
+                    gridcolor: '#eee',
+                    gridwidth: 0.5,
+                    zerolinecolor: '#eee',
+                    zerolinewidth: 0.5,
+                    linecolor: '#eee',
+                    linewidth: 0.5,
+                    title: 'Total Student Count',
+                    // scaleanchor: 'x',
+                    // scaleratio: 0.002,
+                    // range: [0, 1000],
+                    rangemode: 'nonnegative'
+                },
+                autosize: true,
+                hovermode: 'closest'
+            };
+            this.$nextTick(() => {
+                Plotly.newPlot(this.$refs.scatter, data, layout, { showLink: false, displayModeBar: false });
+                this.$refs.scatter.on('plotly_click', (data) => {
+                    this.handleClickCourse(data.points[0].id);
+                });
             });
         },
         handleClickCourse (courseId) {
-            this.$router.push({ name: 'CourseDetail', params: { courseId } });
+            this.$router.push({ path: `/course/${courseId}/overview` });
+            // this.$router.push({ name: 'CourseOverviewPage', params: { courseId } });
         }
     },
 
     watch: {
         sortSelectValue: function () { this.onSearch(); },
-        filters: function () { this.onSearch(); }
+        filters: function () { this.onSearch(); },
+        scatterSwitch: function () { this.renderScatter(); },
+        '$route': function () {
+            if (this.$refs.scatter) this.$refs.scatter.innerHTML = '';
+            this.$nextTick(() => { this.renderScatter(); });
+        }
     },
 
     mounted () {
+        this.renderScatter();
     }
 };
 </script>
@@ -230,10 +312,6 @@ export default {
 .wrap {
     background: #fefefe;
     height: 100%;
-}
-
-.container {
-    padding: 0;
 }
 
 header {

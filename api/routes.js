@@ -26,6 +26,8 @@ module.exports = function apiRoutes () {
 
     apiRouter.get('/course',
         api.wrapper(require('./controllers/course').get));
+    apiRouter.get('/course/:id',
+        api.wrapper(require('./controllers/course').getById));
 
     apiRouter.post('/comment',
         authPrivate,

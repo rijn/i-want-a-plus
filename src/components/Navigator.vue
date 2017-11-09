@@ -12,7 +12,7 @@
                 <div class="group">
                     <div class="title">{{ group }}</div>
                 </div>
-                <router-link v-for="(r, link) in vgroup" :to="r.v" class="nav-link" active-class="active">
+                <router-link v-for="(r, link) in vgroup" :to="r.v" class="nav-link" active-class="active" :key="link">
                     <span class="icon inactive"><i class="icon" :class="[r.icon]"></i></span>
                     <span class="icon active"><i class="icon" :class="[r.iconActive]"></i></span>
                     <div class="title">{{ link }}</div>
@@ -48,7 +48,7 @@ export default {
                     Course: {
                         icon: 'ion-ios-bookmarks-outline',
                         iconActive: 'ion-ios-bookmarks',
-                        v: { path: 'course' }
+                        v: { name: 'Course' }
                     },
                     Professor: {
                         icon: 'ion-ios-people-outline',

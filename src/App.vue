@@ -4,7 +4,9 @@
         <el-aside width="270px"><Navigator /></el-aside>
         <el-main class="core">
             <transition name="el-fade-in-linear">
-                <router-view></router-view>
+                <keep-alive>
+                    <router-view></router-view>
+                </keep-alive>
             </transition>
         </el-main>
     </el-container>
@@ -81,7 +83,7 @@ html, body {
     width: 100%;
 }
 
-button {
+button:not(.el-button--text) {
     border: 0 !important;
     transition: background .1s ease-in-out, color .1s ease-in-out, box-shadow .1s ease-in-out;
     box-shadow: 0 0 0 0.5px rgba(0,0,0,.16), 0 1px 0 rgba(0,0,0,.1);
@@ -121,6 +123,15 @@ ul, li {
     list-style: none;
 }
 
+
+.seperation-before-list {
+    padding: 20px 10px 5px 10px;
+    box-shadow: inset 0 -0.5px 0 rgba(0,0,0,.15);
+    .title {
+        font-size: 0.875rem;
+    }
+}
+
 .full-list {
     li {
         padding: 10px;
@@ -137,6 +148,13 @@ ul, li {
     }
 }
 
+h1, h2 {
+    font-weight: 300;
+    margin: 0;
+}
+h1 { font-size: 1.4rem; font-weight: 200; }
+h2 { font-size: 1rem; }
+
 .inline > * {
     display: inline-block;
 }
@@ -146,5 +164,13 @@ ul, li {
 
 .el-tag + .el-tag {
     margin-left: 0.3rem;
+}
+
+.border.left {
+    box-shadow: inset 0.5px 0 0 rgba(0,0,0,.15);
+}
+
+.el-contianer {
+    height: 100%;
 }
 </style>

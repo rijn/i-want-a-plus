@@ -1,10 +1,13 @@
 <template>
     <section>
         <el-row class="inline">
-            <h2>{{course.subject}}</h2><h2>{{course.course}}</h2><h1>{{course.title}}</h1>
+            <h2>{{course.subject}}</h2>&nbsp;<h2>{{course.course}}</h2>&nbsp;&nbsp;<h1>{{course.title}}</h1>
         </el-row>
         <el-row class="inline info">
-            <div class="inline"><p class="light">Averate GPA</p><p :style="{ color: colorMap[course.averageGpa.toFixed(1) * 10] }">{{course.averageGpa.toFixed(2)}}</p></div>
+            <div class="inline padding">
+                <p class="light">Averate GPA</p><p :style="{ color: colorMap1[course.averageGpa.toFixed(1) * 10] }">{{course.averageGpa.toFixed(2)}}</p>
+                <p class="light">Student Count</p><p :style="{ color: colorMap2[parseInt(100 - (course.totalStudentCount > 500 ? 100 : course.totalStudentCount / 5 / 1.5 + 33))] }">{{ course.totalStudentCount }}</p>
+            </div>
         </el-row>
     </section>
 </template>
@@ -12,6 +15,16 @@
 <script>
 import { Row, Col } from 'element-ui';
 import colormap from 'colormap';
+const colorMap1 = colormap({
+    colormap: 'warm',
+    nshades: 41,
+    format: 'hex'
+});
+const colorMap2 = colormap({
+    colormap: 'greens',
+    nshades: 101,
+    format: 'hex'
+});
 
 export default {
     name: 'CourseSummary',
@@ -29,11 +42,8 @@ export default {
 
     data () {
         return {
-            colorMap: colormap({
-                colormap: 'warm',
-                nshades: 41,
-                format: 'hex'
-            })
+            colorMap1,
+            colorMap2
         };
     },
 
@@ -43,19 +53,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-h1, h2 {
-    font-weight: 300;
-    margin: 0;
-}
-h1 { font-size: 1.4rem; font-weight: 200; }
-h2 { font-size: 1rem; }
-
-.inline {
-    & > * {
-        display: inline-block;
-        padding-right: 0.5rem;
-    }
-}
 .info {
     padding-top: 0.3rem;
     p {

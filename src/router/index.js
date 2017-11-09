@@ -3,6 +3,7 @@ import Router from 'vue-router';
 const Hello = resolve => require(['@/components/Hello'], resolve);
 const LoginPage = resolve => require(['@/components/LoginPage'], resolve);
 const CoursePage = resolve => require(['@/components/CoursePage'], resolve);
+const CourseOverviewPage = resolve => require(['@/components/CourseOverviewPage'], resolve);
 
 Vue.use(Router);
 
@@ -21,9 +22,13 @@ export default new Router({
         name: 'Course',
         component: CoursePage
     }, {
-        path: '/course/:courseId',
-        name: 'CourseDetail',
-        component: CoursePage
+        path: '/course/:id',
+        component: CoursePage,
+        children: [{
+            path: 'overview',
+            name: 'CourseOverviewPage',
+            component: CourseOverviewPage
+        }]
     }],
     scrollBehavior (to, from, savedPosition) {
         if (savedPosition) {

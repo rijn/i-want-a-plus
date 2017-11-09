@@ -2,6 +2,7 @@ const _ = require('lodash');
 const { pipeline, pick } = require('../utils');
 const models = require('../../models');
 const Op = models.Sequelize.Op;
+const { ServerError } = require('../middleware/error-handler');
 
 const plusField = [ 'limit', 'offset' ];
 const addiField = _.concat([ 'order', 'group' ], plusField);
@@ -10,7 +11,7 @@ const timeFieldToExclude = {
     exclude: [ 'createdAt', 'updatedAt', 'deletedAt' ]
 };
 const groupField = {
-    'averageGpa': [models.sequelize.fn('AVG', models.sequelize.col('Section.PastSection.averageGpa'))]
+    // 'averageGpa': [models.sequelize.fn('AVG', models.sequelize.col('Section.PastSection.averageGpa'))]
 };
 const generateModel = (model, as, options) => ({
     model: model,
@@ -30,11 +31,16 @@ exports.get = (options) => {
         (options) => {
             return models.Course.findAll(_.assign({
                 attributes: timeFieldToExclude,
-                where: { deletedAt: null },
-                where: _.map(_.pick(_.omit(options, addiField, likeField), _.keys(models.Course.rawAttributes)), (value, key) => ({
-                    [Op.or]: _.map(_.split(value, ','), v => _.set({}, key, v))
-                })),
-                where: _.pick(options, likeField),
+                where: _.assign({ deletedAt: null },
+                    _.mapValues(_.pick(_.omit(options, addiField, likeField), _.keys(models.Course.rawAttributes)), (value, key) =>
+                        value.indexOf(',') !== -1
+                        ? ({
+                            [Op.or]: _.map(_.split(value, ','), v => _.set({}, [Op.eq], v))
+                        })
+                        : value
+                    ),
+                    _.pick(options, likeField)
+                ),
                 include: [
                     generateModel(models.School, 'Schools', options),
                     _.assign(generateModel(models.Section, 'Sections', options), {
@@ -68,4 +74,40 @@ exports.get = (options) => {
     ];
 
     return pipeline(tasks, options);
-}
+};
+
+exports.getById = (options) => {
+    let tasks = [
+        (options) => {
+            return models.Course.findOne(_.assign({
+                attributes: timeFieldToExclude,
+                where: { id: options.id, deletedAt: null },
+                include: [
+                    generateModel(models.School, 'Schools', options),
+                    _.assign(generateModel(models.Section, 'Sections', options), {
+                        include: [
+                            generateModel(models.PastSection, 'PastSections', options),
+                            generateModel(models.CurrentSection, 'CurrentSections', options),
+                            _.assign(generateModel(models.Professor, 'Professors', options), {
+                                duplicating: false,
+                                required: true,
+                                through: {
+                                    model: models.Teach,
+                                    attributes: []
+                                }
+                            })
+                        ]
+                    })
+                ]
+            }));
+        },
+        (data) => {
+            if (!data) {
+                throw new ServerError({ message: 'No course found', statusCode: 404 });
+            }
+            return data;
+        }
+    ];
+
+    return pipeline(tasks, options);
+};
