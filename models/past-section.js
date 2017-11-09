@@ -80,6 +80,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.FLOAT,
             defaultValue: 0
         },
+        sd: {
+            type: DataTypes.FLOAT,
+            defaultValue: 0
+        },
         totalStudentCount: {
             type: DataTypes.INTEGER,
             defaultValue: 0
@@ -92,6 +96,7 @@ module.exports = (sequelize, DataTypes) => {
             beforeCreate: (pastSection, options) => {
                 pastSection.averageGpa = require('./utils').calculateAvgGpa(pastSection);
                 pastSection.totalStudentCount = require('./utils').calculateTotalStudent(pastSection);
+                pastSection.sd = require('./utils').calculateSD(pastSection);
             }
         }
     });

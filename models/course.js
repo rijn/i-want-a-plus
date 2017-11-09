@@ -22,6 +22,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.FLOAT,
             defaultValue: 0
         },
+        sd: {
+            type: DataTypes.FLOAT,
+            defaultValue: 0
+        },
         totalStudentCount: {
             type: DataTypes.INTEGER,
             defaultValue: 0
