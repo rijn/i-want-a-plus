@@ -5,8 +5,8 @@
         </el-row>
         <el-row class="inline info">
             <div class="inline padding">
-                <p class="light">Averate GPA</p><p :style="{ color: colorMap1[course.averageGpa.toFixed(1) * 10] }">{{course.averageGpa.toFixed(2)}}</p>
-                <p class="light">Student Count</p><p :style="{ color: colorMap2[parseInt(100 - (course.totalStudentCount > 500 ? 100 : course.totalStudentCount / 5 / 1.5 + 33))] }">{{ course.totalStudentCount }}</p>
+                <p class="light">Averate GPA</p><p :style="{ color: course.averageGpa && colorMap1[course.averageGpa.toFixed(1) * 10] }">{{course.averageGpa ? course.averageGpa.toFixed(2) : '---'}}</p>
+                <p class="light">Student Count</p><p :style="{ color: course.totalStudentCount && colorMap2[parseInt(100 - (course.totalStudentCount > 500 ? 100 : course.totalStudentCount / 5 / 1.5 + 33))] }">{{ course.totalStudentCount || '---' }}</p>
             </div>
         </el-row>
     </section>

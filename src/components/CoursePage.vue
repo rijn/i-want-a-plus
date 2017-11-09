@@ -235,7 +235,7 @@ export default {
                 type: 'scatter',
                 name: courses[0].subject,
                 x: _.map(courses, 'averageGpa'),
-                y: _.map(courses, 'totalStudentCount'),
+                y: _.map(courses, 'sd'),
                 ids: _.map(courses, 'id'),
                 text: _.map(courses, course => `${course.subject} ${course.course}: ${course.title}`),
                 marker: {

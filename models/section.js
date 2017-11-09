@@ -13,9 +13,13 @@ let updateParentCourseStatistic = (section, options) => {
     }).then(sections => {
         return Promise.all(_.map(sections, section => section.getPastSection()));
     }).then(pastSections => {
+        if (!pastSections.length) return;
         let totalStudentCount = _.sum(_.map(pastSections, 'totalStudentCount'));
-        let totalGpa = _.sum(_.map(pastSections, pastSection => pastSection.averageGpa * pastSection.totalStudentCount));
+        let totalGpa = _.sum(_.map(pastSections, pastSection =>
+            pastSection.totalStudentCount ? pastSection.averageGpa * pastSection.totalStudentCount : 0
+        ));
         let sd = 0;
+        console.log(totalStudentCount, totalGpa, sd);
         return _course.update({
             totalStudentCount,
             averageGpa: totalStudentCount > 0 ? (totalGpa / totalStudentCount) : 0,
