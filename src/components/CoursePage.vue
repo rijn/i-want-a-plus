@@ -135,6 +135,19 @@ export default {
                     label: 'GPA: Low to high',
                     insetLabel: 'Low to high'
                 }]
+            }, {
+                label: 'Standard Deviation',
+                options: [{
+                    value: 'sd,ASC',
+                    icon: 'ion-android-arrow-up',
+                    label: 'SD: Low to high',
+                    insetLabel: 'Low to high'
+                }, {
+                    value: 'sd,DESC',
+                    icon: 'ion-android-arrow-down',
+                    label: 'SD: High to low',
+                    insetLabel: 'High to low'
+                }]
             }],
             filterMap: {
                 course: {
@@ -168,7 +181,6 @@ export default {
 
     methods: {
         createLoadingInstance () {
-            console.log(this.$refs);
             this.loadingInstance = Loading.service({
                 target: this.$refs.courseHeader.$el,
                 background: 'rgba(255, 255, 255, 0.8)'
@@ -230,7 +242,7 @@ export default {
         },
         renderScatter () {
             if (!this.scatterSwitch) return;
-            let data = _.map(_.values(_.groupBy(this.courses, 'subject')), courses => ({
+            let data = _.map(_.values(_.groupBy(_.filter(this.courses, 'averageGpa'), 'subject')), courses => ({
                 mode: 'markers',
                 type: 'scatter',
                 name: courses[0].subject,
@@ -240,7 +252,13 @@ export default {
                 text: _.map(courses, course => `${course.subject} ${course.course}: ${course.title}`),
                 marker: {
                     sizemode: 'area',
-                    size: _.map(courses, 'totalStudentCount')
+                    size: _.map(courses, course =>
+                        _.get(course, 'totalStudentCount') / _.uniqBy(
+                            _.filter(course.Sections, 'PastSection.totalStudentCount'),
+                            section => `${section.year}${section.term}`
+                        ).length
+                    ),
+                    opacity: _.map(courses, course => (parseInt(course.course) / 100 / 5 / 1.5) + 0.3)
                 }
             }));
             let layout = {
@@ -270,13 +288,20 @@ export default {
                     zerolinewidth: 0.5,
                     linecolor: '#eee',
                     linewidth: 0.5,
-                    title: 'Total Student Count',
+                    title: 'SD',
+                    rangemode: 'nonnegative'
                     // scaleanchor: 'x',
                     // scaleratio: 0.002,
                     // range: [0, 1000],
-                    rangemode: 'nonnegative'
                 },
                 autosize: true,
+                margin: {
+                    l: 50,
+                    r: 50,
+                    b: 50,
+                    t: 50,
+                    pad: 4
+                },
                 hovermode: 'closest'
             };
             this.$nextTick(() => {

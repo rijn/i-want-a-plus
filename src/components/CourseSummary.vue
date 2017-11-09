@@ -7,6 +7,7 @@
             <div class="inline padding">
                 <p class="light">Averate GPA</p><p :style="{ color: course.averageGpa && colorMap1[course.averageGpa.toFixed(1) * 10] }">{{course.averageGpa ? course.averageGpa.toFixed(2) : '---'}}</p>
                 <p class="light">Student Count</p><p :style="{ color: course.totalStudentCount && colorMap2[parseInt(100 - (course.totalStudentCount > 500 ? 100 : course.totalStudentCount / 5 / 1.5 + 33))] }">{{ course.totalStudentCount || '---' }}</p>
+                <p class="light">Standard Deviation</p><p :style="{ color: course.sd && colorMap1[40 - course.sd.toFixed(1) * 10] }">{{ course.sd ? course.sd.toFixed(3) : '---' }}</p>
             </div>
         </el-row>
     </section>

@@ -4,6 +4,35 @@
             <el-row class="inline infobox">
                 <CourseSummary :course="course"></CourseSummary>
             </el-row>
+            <el-row class="inline infobox">
+                <el-tag v-for="(groupPreset, displayText) in groupPresets" size="small"
+                    :type="groupPreset.enabled ? '' : 'info'"
+                    class="clickable"
+                    @click.native="toggle(groupPreset)">
+                    {{ displayText }}
+                </el-tag>
+                <div style="float: right;">
+                    <el-switch
+                        disabled
+                        active-text="Score"
+                        inactive-text="Grade">
+                    </el-switch>
+                </div>
+            </el-row>
+            <div ref="lineGraph" :style="{ width: '98%', margin: '1%', height: '300px' }">
+            </div>
+            <template v-if="false">
+                <div class="seperation-before-list">
+                    <div class="title">
+                        Reduced
+                    </div>
+                </div>
+                <ul class="full-list">
+                    <li v-for="section in reduced" class="clickable">
+                        <SectionSummary :section="section"></SectionSummary>
+                    </li>
+                </ul>
+            </template>
             <div class="seperation-before-list">
                 <div class="title">
                     Sections
@@ -30,10 +59,13 @@
 <script>
 import {
     Button, Form, FormItem, Input, Select, Option, OptionGroup, Autocomplete, Tag,
-    Container, Aside, Main, Header, Row, Alert
+    Container, Aside, Main, Header, Row, Alert, Switch
 } from 'element-ui';
 import CourseSummary from './CourseSummary';
 import SectionSummary from './SectionSummary';
+import _ from 'lodash';
+import { pastSectionReducer, mapObjectOrArray, gradeText } from '../../models/utils';
+import Plotly from 'plotly.js';
 
 export default {
     name: 'CourseOverviewPage',
@@ -54,6 +86,7 @@ export default {
         'el-header': Header,
         'el-row': Row,
         'el-alert': Alert,
+        'el-switch': Switch,
         CourseSummary,
         SectionSummary
     },
@@ -61,26 +94,105 @@ export default {
     props: {
     },
 
-    computed: {
-    },
-
     data () {
         return {
             courseId: null,
             course: null,
-            error: null
+            error: null,
+            groupPresets: {
+                Year: {
+                    key: 'year',
+                    enabled: false
+                },
+                Term: {
+                    key: 'term',
+                    enabled: false
+                },
+                Professor: {
+                    key: 'Professors.0.lastName',
+                    enabled: true
+                }
+            },
+            reduced: []
         };
+    },
+
+    computed: {
+        group: function () {
+            return _.map(_.filter(this.groupPresets, 'enabled'), 'key');
+        }
     },
 
     methods: {
         getCourseId () {
             this.courseId = this.$route.params.id;
         },
+        reducer () {
+            let dataSets = _.map(
+                _.groupBy(this.course.Sections, v => JSON.stringify(_.pick(v, this.group))),
+                (sections, extended) => ({
+                    ...pastSectionReducer(_.map(sections, 'PastSection')),
+                    ...JSON.parse(extended)
+                })
+            );
+            _.each(dataSets, dataSet => _.set(dataSet, 'name', _.join(_.map(this.group, g => _.get(dataSet, g)), ',')));
+            this.reduced = dataSets;
+            this.plot(dataSets);
+        },
+        toggle (groupPreset) {
+            groupPreset.enabled = !groupPreset.enabled;
+        },
+        plot (dataSets) {
+            dataSets = dataSets.map(dataSet => _.has(dataSet, 'crn') ? dataSet.PastSection : dataSet);
+            let data = _.map(dataSets, dataSet => {
+                let yData = _.map(mapObjectOrArray(dataSet), v => v / dataSet.totalStudentCount);
+                let xData = [...Array(yData.length).keys()];
+                return _.assign({
+                    x: xData,
+                    y: yData,
+                    type: 'markers'
+                }, dataSet.name ? { name: dataSet.name } : {});
+            });
+
+            let layout = {
+                xaxis: {
+                    showgrid: true,
+                    zeroline: false,
+                    showline: true,
+                    linecolor: '#eee',
+                    linewidth: 0.5,
+                    title: 'Grade',
+                    showticklabels: true,
+                    tickmode: 'array',
+                    ticktext: gradeText,
+                    tickvals: [...Array(gradeText.length).keys()]
+                },
+                yaxis: {
+                    showgrid: false,
+                    tickformat: ',.0%'
+                },
+                autosize: true,
+                margin: {
+                    l: 70,
+                    r: 40,
+                    b: 50,
+                    t: 10,
+                    pad: 4
+                },
+                hovermode: 'closest'
+            };
+
+            this.$nextTick(() => {
+                Plotly.newPlot(this.$refs.lineGraph, data, layout, { showLink: false, displayModeBar: false });
+            });
+        },
         onLoad () {
             this.error = this.course = null;
             this.$api.course.get({ id: this.courseId }).then(({ body }) => {
                 this.course = body;
+                this.reducer();
             }).catch(e => {
+                console.log(e);
                 this.error = e.body.errors[0];
             });
         }
@@ -90,6 +202,9 @@ export default {
         '$route': function () {
             this.getCourseId();
             this.onLoad();
+        },
+        group: function () {
+            this.reducer();
         }
     },
 

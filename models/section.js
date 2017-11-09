@@ -5,8 +5,7 @@
 const Promise = require('bluebird');
 const _ = require('lodash');
 
-let { dist, calculateSD } = require('./utils');
-let grade = [ 4.0, 4.0, 3.67, 3.33, 3.0, 2.67, 2.33, 2.0, 1.67, 1.36, 1.0, 0.67, 0.00 ];
+let { pastSectionReducer } = require('./utils');
 
 let updateParentCourseStatistic = (section, options) => {
     let _course;
@@ -16,18 +15,7 @@ let updateParentCourseStatistic = (section, options) => {
     }).then(sections => {
         return Promise.all(_.map(sections, section => section.getPastSection()));
     }).then(pastSections => {
-        if (_.isEmpty(pastSections.length)) return;
-        let totalStudentCount = _.sum(_.map(pastSections, 'totalStudentCount'));
-        let totalGpa = _.sum(_.map(pastSections, pastSection => pastSection.averageGpa * pastSection.totalStudentCount));
-        let averageGpa = totalStudentCount > 0 ? (totalGpa / totalStudentCount) : 0;
-        let sd = calculateSD(_.reduce(pastSections, (collection, pastSection) => {
-            _.each(dist, d => {
-                collection[d] = (collection[d] || 0) + (pastSection[d] || 0);
-            });
-            return collection;
-        }, { averageGpa }));
-
-        return _course.update({ totalStudentCount, averageGpa, sd });
+        return _course.update(_.pick(pastSectionReducer(pastSections), [ 'totalStudentCount', 'averageGpa', 'sd' ]));
     });
 };
 

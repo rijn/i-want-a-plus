@@ -132,6 +132,10 @@ ul, li {
     }
 }
 
+.clickable {
+    cursor: pointer;
+}
+
 .full-list {
     li {
         padding: 10px;
@@ -139,7 +143,6 @@ ul, li {
         & {
             box-shadow: inset 0 -0.5px 0 rgba(0,0,0,.15);
         }
-        cursor: pointer;
         transition: background .1s ease-in-out, color .1s ease-in-out, box-shadow .1s ease-in-out;
         &.clickable:hover {
             background: rgba(0,0,0,.03);

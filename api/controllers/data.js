@@ -2,6 +2,7 @@ const { pipeline, pick } = require('../utils');
 const Promise = require('bluebird');
 const _ = require('lodash');
 const models = require('../../models');
+const ProgressBar = require('progress');
 
 let extractName = (name) => {
     return {
@@ -31,6 +32,12 @@ exports.updateCsv = (options) => {
             return data.map(row => _.zipObject(head, row));
         },
         (data) => {
+            let bar = new ProgressBar('  loading [:bar] :rate/eps :percent :current/:total :elapsed/:etas', {
+                total: data.length,
+                incomplete: ' ',
+                head: '>',
+                width: 30
+            });
             return Promise.each(data, item => {
                 let professor, course, section;
                 return models.Professor.findOrCreate({
@@ -69,10 +76,15 @@ exports.updateCsv = (options) => {
                             ProfessorId: professor.id
                         }
                     });
+                }).then(() => {
+                    bar.tick();
                 });
             });
         },
-        (data) => ({ success: data.length })
+        (data) => {
+            console.log('finish loading data');
+            return { success: data.length };
+        }
     ];
 
     return pipeline(tasks, options);
