@@ -152,11 +152,11 @@ ul, li {
 }
 
 h1, h2 {
-    font-weight: 300;
-    margin: 0;
+    font-weight: 300 !important;
+    margin: 0 !important;
 }
-h1 { font-size: 1.4rem; font-weight: 200; }
-h2 { font-size: 1rem; }
+h1 { font-size: 1.4rem !important; font-weight: 200 !important; }
+h2 { font-size: 1rem !important; }
 
 .inline > * {
     display: inline-block;

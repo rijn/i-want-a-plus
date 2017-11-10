@@ -7,12 +7,12 @@
 </template>
 
 <script>
-import { Button, Select } from 'element-ui';
+import { Button } from 'element-ui';
 
 export default {
     name: 'Hello',
 
-    components: { 'el-button': Button, Select },
+    components: { 'el-button': Button },
 
     data () {
         return {
