@@ -1,4 +1,13 @@
 const _ = require('lodash');
+const fp = require('lodash/fp');
+
+exports.mixin = (__) => {
+    let sequelize = require('.').sequelize;
+    __.mixin(_.flow([
+        fp.pick([ 'query', 'escape' ]),
+        fp.mapValues(_.partial(_.bind, _, sequelize))
+    ])(sequelize));
+}
 
 let dist = [ 'ap', 'a', 'am', 'bp', 'b', 'bm', 'cp', 'c', 'cm', 'dp', 'd', 'dm', 'f' ];
 exports.dist = dist;

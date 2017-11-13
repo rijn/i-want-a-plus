@@ -5,9 +5,19 @@
 module.exports = (sequelize, DataTypes) => {
     var Comment = sequelize.define('Comment', {
         content: {
-            type: DataTypes.STRING
+            type: DataTypes.STRING,
+            allowNull: true
         },
-        // rating
+        rating: {
+            type: DataTypes.FLOAT,
+            defaultValue: 0,
+            allowNull: false,
+            validate: {
+                isFloat: true,
+                max: 5,
+                min: 0
+            }
+        }
     }, {
         paranoid: true,
         getterMethods: {},
@@ -16,7 +26,9 @@ module.exports = (sequelize, DataTypes) => {
 
     Comment.associate = models => {
         Comment.belongsTo(models.User);
-        Comment.belongsTo(models.Course);
+        Comment.belongsTo(models.Course, { constraint: false });
+        Comment.belongsTo(models.Section, { constraint: false });
+        Comment.belongsTo(models.Professor, { constraint: false });
     };
 
     return Comment;

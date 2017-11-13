@@ -1,32 +1,53 @@
 const _ = require('lodash');
-const utils = require('../utils');
-const { pipeline, pick, deserialize } = utils;
-const { User, Comment, sequelize } = require('../../models');
+const { pipeline, pick, deserialize } = require('../utils');
+const { User, Comment, Course, Section, Professor, sequelize: { QueryTypes }, utils: { mixin } } = require('../../models');
+mixin(_);
 const { ServerError } = require('../middleware/error-handler');
 
 exports.get = (options) => {
-    // get comment / user / course through options.id
     let tasks = [
-      (options) => {
-          return sequelize.query(`SELECT Comments.content,Users.email
-          FROM Comments, Users
-          WHERE Comments.id=Users.id and UserId=${options.id}`).then(
-            (result) => {
-              return result[0][0];
+        pick([ 'CourseId', 'SectionId', 'ProfessorId', 'id' ]),
+        conditions => _.join(_.map(conditions, (v, k) => `Comments.${k}=` + _.escape(v)), ' AND '),
+        (conditions) => {
+            return _.query(`
+                SELECT
+                    Comments.id,
+                    Comments.content, Comments.rating,
+                    Courses.id as Course_id,
+                    Sections.id as Section_id,
+                    Professors.id as Professor_id
+                FROM Comments
+                    LEFT JOIN Users
+                    ON Comments.UserId = Users.id
+                    LEFT JOIN Courses
+                    ON Comments.CourseId = Courses.id
+                    LEFT JOIN Sections
+                    ON Comments.SectionId = Sections.id
+                    LEFT JOIN Professors
+                    ON Comments.ProfessorId = Professors.id
+                WHERE ${conditions};
+            `, {
+                type: QueryTypes.SELECT
             });
-      }
+        },
+        deserialize
     ];
 
     return pipeline(tasks, options);
-}
+};
 
 exports.post = (object, options) => {
     let tasks = [
         (options) => {
-            return Comment.create({
-                content: object.content,
-                UserId: options.mw.user.id
-            }, { include: [{ model: User }] });
+            return Comment.create(_.assign(
+                {
+                    UserId: options.mw.user.id
+                },
+                _.pick(options, 'CourseId', 'SectionId', 'ProfessorId'),
+                object
+            ), {
+                include: [ User, Course, Section, Professor ]
+            });
         },
         () => ({})
     ];
@@ -35,7 +56,7 @@ exports.post = (object, options) => {
 };
 
 let checkUserAndComment = (CommentId, UserId) => {
-    return sequelize.query(`SELECT COUNT(*) as quant
+    return _.query(`SELECT COUNT(*) as quant
                             FROM Comments, Users
                             WHERE Comments.UserId = Users.id
                                 and Comments.UserId = ${UserId}
@@ -50,18 +71,12 @@ let checkUserAndComment = (CommentId, UserId) => {
 }
 
 exports.update = (object, options) => {
-    // update comment through id
-    // object.content
-
-    console.log("This is Object");
-    console.log(object);
-
     let tasks = [
         () => {
             return checkUserAndComment(options.id, options.mw.user.id);
         },
         () => {
-            return sequelize.query(`UPDATE Comments
+            return _.query(`UPDATE Comments
                             SET content = \'${object.content}\'
                             WHERE Comments.id = ${options.id}`)
             .then((result) => {
@@ -81,7 +96,7 @@ exports.delete = (options) => {
             return checkUserAndComment(options.id, options.mw.user.id);
         },
         () =>{
-            return sequelize.query(`DELETE FROM Comments WHERE Comments.id = ${options.id}`)
+            return _.query(`DELETE FROM Comments WHERE Comments.id = ${options.id}`)
         }
 
     ];
@@ -103,7 +118,7 @@ exports.getAllMyComments = (options) => {
 exports.getCommentsOfCourse = (options) => {
     let tasks = [
         (options) => {
-            return sequelize.query(`SELECT
+            return _.query(`SELECT
                     Comments.id, Comments.content, Comments.createdAt, Comments.updatedAt,
                     Users.id as user_id, Users.email as user_email
                 FROM Users, Courses, Comments

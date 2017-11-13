@@ -1,9 +1,14 @@
 var express = require('express');
 var api = require('.');
+const { wrapper } = api;
 // var tmpdir = require('os').tmpdir;
 // var upload = require('multer')({dest: tmpdir()});
 var passport = require('./auth').passport;
 const checkPermission = require('./auth').permission.checkPermission;
+const { paramExtract } = require('./utils');
+const _ = require('lodash');
+
+const commentController = require('./controllers/comment');
 
 module.exports = function apiRoutes () {
     var apiRouter = express.Router();
@@ -33,21 +38,20 @@ module.exports = function apiRoutes () {
         authPrivate,
         api.wrapper(require('./controllers/comment').post));
 
-    apiRouter.get('/comment/:id',
-        // authPrivate,
-        api.wrapper(require('./controllers/comment').get));
-    apiRouter.put('/comment/:id',
-        authPrivate,
-        api.wrapper(require('./controllers/comment').update));
-    apiRouter.delete('/comment/:id',
-        authPrivate,
-        api.wrapper(require('./controllers/comment').delete));
-    apiRouter.get('/course/:id/comments',
-        api.wrapper(require('./controllers/comment').getCommentsOfCourse));
+    // Comment
 
-    apiRouter.get('/user/comments',
-        authPrivate,
-        api.wrapper(require('./controllers/comment').getAllMyComments));
+    apiRouter.get('/comment/:id', wrapper(commentController.get));
+    apiRouter.put('/comment/:id', authPrivate, wrapper(commentController.update));
+    apiRouter.delete('/comment/:id', authPrivate, wrapper(commentController.delete));
+
+    apiRouter.get('/user/comments', authPrivate, wrapper(commentController.getAllMyComments));
+
+    _.each([ 'course', 'section', 'professor' ], role => {
+        let endpoint = `/${role}/:id/comment`;
+        let pe = { id: _.capitalize(role) + 'Id' };
+        apiRouter.get(endpoint, paramExtract(pe), wrapper(commentController.get));
+        apiRouter.post(endpoint, authPrivate, paramExtract(pe), wrapper(commentController.post));
+    });
 
     apiRouter.post('/notification',
         authPrivate,

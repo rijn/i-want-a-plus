@@ -27,6 +27,7 @@ module.exports = (sequelize, DataTypes) => {
             },
             foreignKey: 'ProfessorId'
         });
+        Professor.hasMany(models.Comment);
     };
 
     return Professor;
