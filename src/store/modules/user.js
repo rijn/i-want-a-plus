@@ -36,12 +36,16 @@ const mutations = {
 
         let expiration = new Date().getTime() + 1 * 24 * 60 * 60 * 1000;
         store.set('user', { email, token }, expiration);
+
+        Vue.http.headers.common['Authorization'] = `Bearer ${token}`;
     }
 };
 
 if (store.get('user')) {
     Vue.set(state, 'email', store.get('user').email);
-    Vue.set(state, 'token', store.get('user').token);
+    let token = store.get('user').token;
+    Vue.set(state, 'token', token);
+    Vue.http.headers.common['Authorization'] = `Bearer ${token}`;
 };
 
 export default {

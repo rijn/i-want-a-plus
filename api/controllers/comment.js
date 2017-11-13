@@ -1,6 +1,6 @@
 const _ = require('lodash');
 const { pipeline, pick, deserialize } = require('../utils');
-const { User, Comment, Course, Section, Professor, sequelize: { QueryTypes }, utils: { mixin } } = require('../../models');
+const { User, Comment, Course, Section, Professor, sequelize: { QueryTypes }, mixin } = require('../../models');
 mixin(_);
 const { ServerError } = require('../middleware/error-handler');
 
@@ -13,6 +13,7 @@ exports.get = (options) => {
                 SELECT
                     Comments.id,
                     Comments.content, Comments.rating,
+                    Comments.createdAt, Comments.updatedAt,
                     Courses.id as Course_id,
                     Sections.id as Section_id,
                     Professors.id as Professor_id
@@ -37,6 +38,7 @@ exports.get = (options) => {
 };
 
 exports.post = (object, options) => {
+    console.log(options);
     let tasks = [
         (options) => {
             return Comment.create(_.assign(

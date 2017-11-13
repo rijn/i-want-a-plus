@@ -5,8 +5,8 @@
         </el-row>
         <el-row class="inline info">
             <div class="inline padding">
-                <p class="light">Averate GPA</p><p :style="{ color: section.PastSection.averageGpa && colorMap1[section.PastSection.averageGpa.toFixed(1) * 10] }">{{section.PastSection.averageGpa ? section.PastSection.averageGpa.toFixed(2) : '---'}}</p>
-                <p class="light">Student Count</p><p>{{ section.PastSection.totalStudentCount || '---' }}</p>
+                <p class="light">Averate GPA</p><template><p v-if="section.PastSection && section.PastSection.averageGpa" :style="{ color: colorMap1[section.PastSection.averageGpa.toFixed(1) * 10] }">{{section.PastSection.averageGpa.toFixed(2)}}</p><p v-else>---</p></template>
+                <p class="light">Student Count</p><p>{{ section.PastSection ? section.PastSection.totalStudentCount : '---' }}</p>
                 <p class="light">Instructor</p><template v-for="professor in section.Professors"><router-link :to="{ name: 'ProfessorOverviewPage', params: { id: professor.id } }"><el-tag type="info" size="mini">{{ professor.lastName + ', ' + professor.firstName }}</el-tag></router-link></template>
             </div>
         </el-row>

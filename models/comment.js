@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
             validate: {
                 isFloat: true,
                 max: 5,
-                min: 0
+                min: 0.1
             }
         }
     }, {

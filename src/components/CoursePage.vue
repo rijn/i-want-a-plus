@@ -1,7 +1,7 @@
 <template>
     <el-container class="wrap">
         <el-container>
-            <el-header ref="courseHeader" height="auto">
+            <el-header ref="courseHeader" height="auto" class="border bottom">
                 <div>
                     <el-autocomplete
                         class="comp long inline-input"
@@ -68,7 +68,7 @@
             </el-main>
         </el-container>
         <el-container class="border left" v-if="$route.params.id">
-            <el-header>
+            <el-header class="border bottom">
                 <router-link :to="{ name: 'Course' }">
                     <el-button type="text" icon="el-icon-arrow-left">Collapse</el-button>
                 </router-link>
@@ -337,11 +337,16 @@ export default {
 .wrap {
     background: #fefefe;
     height: 100%;
+
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 230px;
+    right: 0;
 }
 
 header {
     padding: 10px;
-    box-shadow: inset 0 -0.5px 0 rgba(0,0,0,.15);
     & > div {
         padding: 5px;
         margin: 5px;

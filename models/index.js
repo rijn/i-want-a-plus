@@ -1,6 +1,8 @@
 'use strict';
 
 const fs = require('fs');
+const _ = require('lodash');
+const fp = require('lodash/fp');
 const path = require('path');
 const Sequelize = require('sequelize');
 const config = require('../config').db;
@@ -32,5 +34,13 @@ Object.keys(db).forEach(modelName => {
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 db.utils = require('./utils');
+
+db.mixin = (__) => {
+    let sequelize = require('.').sequelize;
+    __.mixin(_.flow([
+        fp.pick([ 'query', 'escape' ]),
+        fp.mapValues(_.partial(_.bind, _, sequelize))
+    ])(sequelize));
+}
 
 module.exports = db;

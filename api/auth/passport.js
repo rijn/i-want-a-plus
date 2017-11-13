@@ -1,6 +1,7 @@
 const passport = require('passport');
 const BearerStrategy = require('passport-http-bearer').Strategy;
 const models = require('../../models');
+const { ServerError } = require('../middleware/error-handler');
 
 passport.use(new BearerStrategy(
     function (accessToken, done) {
@@ -13,7 +14,7 @@ passport.use(new BearerStrategy(
             if (accessToken) {
                 return done(null, accessToken.User);
             } else {
-                return done(null, false);
+                return done(new ServerError({ message: 'Unauthorized', statusCode: 401 }), false);
             }
         });
     }

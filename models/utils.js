@@ -1,14 +1,6 @@
 const _ = require('lodash');
 const fp = require('lodash/fp');
 
-exports.mixin = (__) => {
-    let sequelize = require('.').sequelize;
-    __.mixin(_.flow([
-        fp.pick([ 'query', 'escape' ]),
-        fp.mapValues(_.partial(_.bind, _, sequelize))
-    ])(sequelize));
-}
-
 let dist = [ 'ap', 'a', 'am', 'bp', 'b', 'bm', 'cp', 'c', 'cm', 'dp', 'd', 'dm', 'f' ];
 exports.dist = dist;
 let grade = [ 4.0, 4.0, 3.67, 3.33, 3.0, 2.67, 2.33, 2.0, 1.67, 1.36, 1.0, 0.67, 0.00 ];

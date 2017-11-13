@@ -1,18 +1,16 @@
 <template>
-    <div>
+    <el-container id="hello">
         <h1>iWantA+</h1>
-        <p>{{ response }}</p>
-        <router-link :to="{ name: 'Login' }"><el-button type="primary">Login</el-button></router-link>
-    </div>
+    </el-container>
 </template>
 
 <script>
-import { Button } from 'element-ui';
+import { Container } from 'element-ui';
 
 export default {
     name: 'Hello',
 
-    components: { 'el-button': Button },
+    components: { 'el-container': Container },
 
     data () {
         return {
@@ -26,4 +24,21 @@ export default {
 </script>
 
 <style lang="less" scoped>
+#hello {
+    flex: 1;
+
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #ddd;
+
+    position: absolute;
+    left: 230px;
+    right: 0;
+    top: 0;
+    bottom: 0;
+}
 </style>

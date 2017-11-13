@@ -19,30 +19,44 @@
                     </el-switch>
                 </div>
             </el-row>
-            <div ref="lineGraph" :style="{ width: '98%', margin: '1%', height: '300px' }">
-            </div>
-            <template v-if="false">
-                <div class="seperation-before-list">
-                    <div class="title">
-                        Reduced
-                    </div>
+            <el-row :style="{ paddingRight: '20px' }">
+                <div ref="lineGraph" :style="{ width: '98%', margin: '1%', height: '300px' }">
                 </div>
-                <ul class="full-list">
-                    <li v-for="section in reduced" class="clickable">
-                        <SectionSummary :section="section"></SectionSummary>
-                    </li>
-                </ul>
-            </template>
-            <div class="seperation-before-list">
-                <div class="title">
-                    Sections
-                </div>
-            </div>
-            <ul class="full-list">
-                <li v-for="section in course.Sections" :key="section.id" class="clickable">
-                    <SectionSummary :section="section"></SectionSummary>
-                </li>
-            </ul>
+            </el-row>
+            <el-tabs value="all" type="card">
+                <el-tab-pane label="All Sections" name="all">
+<!--                     <div class="seperation-before-list">
+                        <div class="title">
+                            Sections
+                        </div>
+                    </div> -->
+                    <ul class="full-list">
+                        <li v-for="section in course.Sections" :key="section.id" class="clickable">
+                            <SectionSummary :section="section"></SectionSummary>
+                        </li>
+                    </ul>
+                </el-tab-pane>
+                <el-tab-pane label="Reduced" name="reduced" disabled>
+<!--                     <div class="seperation-before-list">
+                        <div class="title">
+                            Reduced
+                        </div>
+                    </div> -->
+                    <ul class="full-list">
+                        <li v-for="section in reduced" class="clickable">
+                            <SectionSummary :section="section"></SectionSummary>
+                        </li>
+                    </ul>
+                </el-tab-pane>
+                <el-tab-pane label="Comments" name="comments">
+                    <el-row class="inline infobox">
+                        <CommentPosting :endpoint="$api.course.addComment({ id: courseId })"></CommentPosting>
+                    </el-row>
+                    <el-row>
+                        <CommentList :endpoint="$api.course.getComment({ id: courseId })"></CommentList>
+                    </el-row>
+                </el-tab-pane>
+            </el-tabs>
         </el-container>
         <el-row class="long infobox" v-if="error">
             <el-alert
@@ -59,10 +73,12 @@
 <script>
 import {
     Button, Form, FormItem, Input, Select, Option, OptionGroup, Autocomplete, Tag,
-    Container, Aside, Main, Header, Row, Alert, Switch
+    Container, Aside, Main, Header, Row, Alert, Switch, Tabs, TabPane
 } from 'element-ui';
 import CourseSummary from './CourseSummary';
 import SectionSummary from './SectionSummary';
+import CommentPosting from './CommentPosting';
+import CommentList from './CommentList';
 import _ from 'lodash';
 import { pastSectionReducer, mapObjectOrArray, gradeText } from '../../models/utils';
 import Plotly from 'plotly.js';
@@ -87,8 +103,12 @@ export default {
         'el-row': Row,
         'el-alert': Alert,
         'el-switch': Switch,
+        'el-tabs': Tabs,
+        'el-tab-pane': TabPane,
         CourseSummary,
-        SectionSummary
+        SectionSummary,
+        CommentPosting,
+        CommentList
     },
 
     props: {
