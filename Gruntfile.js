@@ -4,7 +4,8 @@
 
 // var _ = require('lodash');
 // var webpack = require('webpack');
-// var fs = require('fs');
+var fs = require('fs');
+var path = require('path');
 var serveStatic = require('serve-static');
 var args = process.argv.slice(2);
 
@@ -119,12 +120,21 @@ module.exports = function (grunt) {
                 '--vue'
             ]));
         }
-        grunt.task.run([
+
+        let tasks = [];
+
+        if (!fs.existsSync(path.join(__dirname, 'src', 'styles', 'theme'))) {
+            tasks.push('shell:buildTheme');
+        }
+
+        tasks = tasks.concat([
             'eslint',
             'env:dev',
             'express:dev',
             target === 'client' ? 'keepalive' : 'watch:server'
         ]);
+
+        grunt.task.run(tasks);
     });
 
     grunt.registerTask('travis', function () {
@@ -142,8 +152,9 @@ module.exports = function (grunt) {
     grunt.registerTask('deploy', function () {
         grunt.task.run([
             'continue:on',
+            'shell:buildTheme',
             'build',
-            'apidoc',
+            // 'apidoc',
             'continue:off',
             'continue:fail-on-warning'
         ]);
