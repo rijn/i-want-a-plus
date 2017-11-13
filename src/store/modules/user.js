@@ -7,6 +7,8 @@ import { Message } from 'element-ui';
 import store from 'store';
 import expirePlugin from 'store/plugins/expire';
 
+import router from '../../router';
+
 store.addPlugin(expirePlugin);
 
 const state = {
@@ -25,6 +27,7 @@ const actions = {
     },
     logout ({ commit, state }) {
         Message.success('You\'ve logged out.');
+        router.go(router.currentRoute);
         commit(types.USER_LOGIN, { email: null, token: null });
     }
 };

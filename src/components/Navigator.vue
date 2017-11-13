@@ -4,11 +4,15 @@
             <div class="group">
                 <div class="title">{{ group }}</div>
             </div>
-            <router-link v-for="(r, link) in vgroup" :to="r.v" class="nav-link" :class="{ disabled: r.disabled }" active-class="active" :key="link">
+            <router-link v-if="!r.disabled" v-for="(r, link) in vgroup" :to="r.v" class="nav-link" active-class="active" :key="link">
                 <span class="icon inactive"><i class="icon" :class="[r.icon]"></i></span>
                 <span class="icon active"><i class="icon" :class="[r.iconActive]"></i></span>
                 <div class="title">{{ link }}</div>
             </router-link>
+            <span v-else class="nav-link disabled">
+                <span class="icon inactive"><i class="icon" :class="[r.icon]"></i></span>
+                <div class="title">{{ link }}</div>
+            </span>
         </section>
     </nav>
 </template>

@@ -19,18 +19,21 @@ let router = new Router({
     }, {
         path: '/login',
         name: 'LoginPage',
-        component: LoginPage
+        component: LoginPage,
+        meta: { title: 'Login' }
     }, {
         path: '/course',
         name: 'CoursePage',
-        component: CoursePage
+        component: CoursePage,
+        meta: { title: 'Course' }
     }, {
         path: '/course/:id',
         component: CoursePage,
         children: [{
             path: 'overview',
             name: 'CourseOverviewPage',
-            component: CourseOverviewPage
+            component: CourseOverviewPage,
+            meta: { title: 'Course' }
         }]
     }, {
         path: '/settings',
@@ -40,7 +43,7 @@ let router = new Router({
             path: 'comment',
             name: 'MyCommentPage',
             component: MyCommentPage,
-            meta: { header: 'My Comment' }
+            meta: { header: 'My Comment', title: 'My Comment' }
         }]
     }],
     scrollBehavior (to, from, savedPosition) {
@@ -50,6 +53,13 @@ let router = new Router({
             return { x: 0, y: 0 };
         }
     }
+});
+
+router.beforeEach((to, from, next) => {
+    if (to.meta.title) {
+        document.title = `A+ - ${to.meta.title}`;
+    }
+    next();
 });
 
 router.beforeEach((to, from, next) => {

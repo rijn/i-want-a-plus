@@ -1,5 +1,5 @@
 <template>
-    <el-container class="long" v-if="isLogin">
+    <el-container class="long" v-if="isLogin" direction="vertical">
         <template v-if="success">
             <el-alert
                 title="Post successfully"
