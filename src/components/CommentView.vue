@@ -1,5 +1,10 @@
 <template>
     <el-container>
+        <div
+            v-if="deletable"
+            style="padding: 0 1rem 0 0; display: flex; align-items: center; justify-content: center;">
+            <el-button type="danger" round icon="el-icon-delete" @click="onDelete"></el-button>
+        </div>
         <el-card class="box-card long">
             <p>{{comment.content || '(no content)'}}</p>
             <el-row class="inline">
@@ -22,7 +27,7 @@ import {
 import { convertDate } from './convert-date';
 
 export default {
-    name: 'CommentPosting',
+    name: 'CommentView',
 
     components: {
         'el-button': Button,
@@ -48,11 +53,26 @@ export default {
     props: {
         comment: {
             type: Object
+        },
+        deletable: {
+            type: Boolean,
+            default: false
         }
     },
 
     computed: {
         ago: function () { return convertDate(this.comment.updatedAt); }
+    },
+
+    methods: {
+        onDelete () {
+            this.$api.comment.delete(this.comment).then(res => {
+                this.$message.success('Delete successfully');
+                this.$emit('delete');
+            }).catch(e => {
+                this.$error(e.body);
+            });
+        }
     }
 };
 </script>

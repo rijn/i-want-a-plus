@@ -1,26 +1,32 @@
 <template>
-    <el-container class="long">
-        <ul class="full-list no-divider long" style="padding: 0 5px;">
+    <el-container v-if="comments">
+        <ul class="full-list no-divider long" style="padding: 0 5px;" v-if="comments.length">
             <li v-for="comment in comments">
-                <CommentView :comment="comment"></CommentView>
+                <CommentView :comment="comment" :deletable="deletable" @delete="loadComments"></CommentView>
             </li>
         </ul>
+        <div class="infobox" v-else>
+            <span class="tip">No content</span>
+        </div>
+    </el-container>
+    <el-container v-else>
     </el-container>
 </template>
 
 <script>
 import {
-    Container
+    Button, Container
 } from 'element-ui';
 import CommentView from './CommentView';
 import { mapGetters } from 'vuex';
 import _ from 'lodash';
 
 export default {
-    name: 'CommentPosting',
+    name: 'CommentList',
 
     components: {
         'el-container': Container,
+        'el-button': Button,
         CommentView
     },
 
@@ -31,6 +37,10 @@ export default {
     props: {
         endpoint: {
             type: [Function, Object]
+        },
+        deletable: {
+            type: Boolean,
+            default: false
         }
     },
 
@@ -40,13 +50,18 @@ export default {
         };
     },
 
+    methods: {
+        loadComments () {
+            (_.isFunction(this.endpoint) ? this.endpoint.apply(this) : this.endpoint).then(res => {
+                this.comments = res.body;
+            }).catch(e => {
+                this.$error(e.body);
+            });
+        }
+    },
+
     mounted () {
-        (_.isFunction(this.endpoint) ? this.endpoint() : this.endpoint).then(res => {
-            console.log(res);
-            this.comments = res.body;
-        }).catch(e => {
-            this.$error(e.body);
-        });
+        this.loadComments();
     }
 };
 </script>

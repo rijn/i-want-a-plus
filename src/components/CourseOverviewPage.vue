@@ -6,6 +6,7 @@
             </el-row>
             <el-row class="inline infobox">
                 <el-tag v-for="(groupPreset, displayText) in groupPresets" size="small"
+                    :key="displayText"
                     :type="groupPreset.enabled ? '' : 'info'"
                     class="clickable"
                     @click.native="toggle(groupPreset)">
@@ -50,10 +51,10 @@
                 </el-tab-pane>
                 <el-tab-pane label="Comments" name="comments">
                     <el-row class="inline infobox">
-                        <CommentPosting :endpoint="$api.course.addComment({ id: courseId })"></CommentPosting>
+                        <CommentPosting :endpoint="$api.course.addComment({ id: courseId })" @post="onCommentPost"></CommentPosting>
                     </el-row>
                     <el-row>
-                        <CommentList :endpoint="$api.course.getComment({ id: courseId })"></CommentList>
+                        <CommentList :endpoint="$api.course.getComment({ id: courseId })" ref="commentList"></CommentList>
                     </el-row>
                 </el-tab-pane>
             </el-tabs>
@@ -212,9 +213,11 @@ export default {
                 this.course = body;
                 this.reducer();
             }).catch(e => {
-                console.log(e);
                 this.error = e.body.errors[0];
             });
+        },
+        onCommentPost () {
+            this.$refs.commentList.loadComments();
         }
     },
 
@@ -236,7 +239,4 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.infobox {
-    padding: 1rem;
-}
 </style>

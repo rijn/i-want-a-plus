@@ -1,5 +1,5 @@
 <template>
-    <el-container class="long">
+    <el-container class="long" v-if="isLogin">
         <template v-if="success">
             <el-alert
                 title="Post successfully"
@@ -34,6 +34,9 @@
                 </div>
             </el-row>
         </template>
+    </el-container>
+    <el-container class="long" v-else>
+        <router-link :to="{ name: 'LoginPage' }"><el-button>Login to post comment</el-button></router-link>
     </el-container>
 </template>
 
@@ -90,6 +93,7 @@ export default {
         postComment () {
             this.endpoint(_.pick(this, 'content', 'rating')).then(res => {
                 this.success = true;
+                this.$emit('post');
             }).catch(e => {
                 this.$error(e.body);
             });

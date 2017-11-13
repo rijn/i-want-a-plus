@@ -45,7 +45,6 @@ if (store.get('user')) {
     Vue.set(state, 'email', store.get('user').email);
     let token = store.get('user').token;
     Vue.set(state, 'token', token);
-    Vue.http.headers.common['Authorization'] = `Bearer ${token}`;
 };
 
 export default {

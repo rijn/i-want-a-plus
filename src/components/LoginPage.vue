@@ -64,8 +64,8 @@ export default {
         checkLogin () {
             if (this.isLogin) {
                 this.$message.success('You\'ve logged in.');
-                let from = this.$route.query.from;
-                this.$router.push({ name: from || 'Main' });
+                let redirect = this.$route.query.redirect;
+                this.$router.push(redirect ? { path: redirect } : { name: 'MainPage' });
             }
         }
     },

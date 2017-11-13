@@ -44,7 +44,7 @@ module.exports = function apiRoutes () {
     apiRouter.put('/comment/:id', authPrivate, wrapper(commentController.update));
     apiRouter.delete('/comment/:id', authPrivate, wrapper(commentController.delete));
 
-    apiRouter.get('/user/comments', authPrivate, wrapper(commentController.getAllMyComments));
+    apiRouter.get('/user/comment', authPrivate, wrapper(commentController.getAllMyComments));
 
     _.each([ 'course', 'section', 'professor' ], role => {
         let endpoint = `/${role}/:id/comment`;

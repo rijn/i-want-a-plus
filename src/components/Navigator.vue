@@ -4,7 +4,7 @@
             <div class="group">
                 <div class="title">{{ group }}</div>
             </div>
-            <router-link v-for="(r, link) in vgroup" :to="r.v" class="nav-link" active-class="active" :key="link">
+            <router-link v-for="(r, link) in vgroup" :to="r.v" class="nav-link" :class="{ disabled: r.disabled }" active-class="active" :key="link">
                 <span class="icon inactive"><i class="icon" :class="[r.icon]"></i></span>
                 <span class="icon active"><i class="icon" :class="[r.iconActive]"></i></span>
                 <div class="title">{{ link }}</div>
@@ -30,29 +30,40 @@ export default {
                     Course: {
                         icon: 'ion-ios-bookmarks-outline',
                         iconActive: 'ion-ios-bookmarks',
-                        v: { name: 'Course' }
+                        v: { name: 'CoursePage' },
+                        disabled: false
                     },
                     Professor: {
                         icon: 'ion-ios-people-outline',
                         iconActive: 'ion-ios-people',
-                        v: { path: 'professor' }
+                        v: { path: 'professor' },
+                        disabled: true
                     }
                 },
                 Account: {
                     Favorite: {
                         icon: 'ion-ios-star-outline',
                         iconActive: 'ion-ios-star',
-                        v: { path: 'favorite' }
+                        v: { path: 'favorite' },
+                        disabled: true
                     },
                     Notification: {
                         icon: 'ion-ios-alarm-outline',
                         iconActive: 'ion-ios-alarm',
-                        v: { path: 'notification' }
+                        v: { path: 'notification' },
+                        disabled: true
+                    },
+                    'My Comments': {
+                        icon: 'ion-ios-chatboxes-outline',
+                        iconActive: 'ion-ios-chatboxes',
+                        v: { name: 'MyCommentPage' },
+                        disabled: false
                     },
                     Settings: {
                         icon: 'ion-ios-cog-outline',
                         iconActive: 'ion-ios-cog',
-                        v: { path: 'settings' }
+                        v: { path: 'settings' },
+                        disabled: true
                     }
                 }
             }
@@ -71,16 +82,5 @@ export default {
 <style lang="less" scoped>
 nav {
     flex: 1;
-
-    // div {
-    //     flex: 1;
-    //     overflow: hidden;
-    //     overflow-y: auto;
-    //     overflow-y: overlay;
-    //     -webkit-overflow-scrolling: touch;
-    //     position: relative;
-    //     z-index: 1;
-    //     min-height: 40%;
-    // }
 }
 </style>

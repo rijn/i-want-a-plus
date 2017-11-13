@@ -1,8 +1,8 @@
 import Vue from 'vue';
 import App from './App';
+import store from './store';
 import router from './router';
 import resource from './resource';
-import store from './store';
 
 import lang from 'element-ui/lib/locale/lang/en';
 import locale from 'element-ui/lib/locale';
@@ -20,7 +20,6 @@ locale.use(lang);
 Vue.prototype.$message = Message;
 
 Vue.prototype.$error = (errors) => {
-    console.log(errors);
     if (errors.errors) errors = errors.errors;
     if (errors.length) errors = errors[0];
     if (errors.message) errors = errors.message;
@@ -30,8 +29,8 @@ Vue.prototype.$error = (errors) => {
 /* eslint-disable no-new */
 new Vue({
     el: '#app',
-    router,
     store,
+    router,
     template: '<App/>',
     components: { App }
 });

@@ -69,7 +69,7 @@
         </el-container>
         <el-container class="border left" v-if="$route.params.id">
             <el-header class="border bottom">
-                <router-link :to="{ name: 'Course' }">
+                <router-link :to="{ name: 'CoursePage' }">
                     <el-button type="text" icon="el-icon-arrow-left">Collapse</el-button>
                 </router-link>
             </el-header>
@@ -346,7 +346,6 @@ export default {
 }
 
 header {
-    padding: 10px;
     & > div {
         padding: 5px;
         margin: 5px;

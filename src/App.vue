@@ -10,7 +10,7 @@
             </header>
             <Navigator />
             <footer>
-                <section v-if="isLogin">
+                <section v-if="isLogin" class="clickable">
                     <a class="nav-link" @click="logout">
                         <span class="icon inactive"><i class="icon ion-ios-locked-outline"></i></span>
                         <div class="title">Logout</div>
@@ -116,7 +116,12 @@ export default {
             padding-left: 20px;
             padding-right: 9px;
 
-            &:hover {
+            &.disabled {
+                cursor: default;
+                color: #ccc;
+            }
+
+            &:not(.disabled):hover {
                 background-color: rgba(0,0,0,.07);
             }
 
@@ -135,6 +140,9 @@ export default {
                 }
                 span.icon.active {
                     display: block;
+                }
+                &:not(.disabled):hover {
+                    background-color: fade(#1988e0, 90%);
                 }
             }
 
@@ -215,6 +223,9 @@ html, body {
 
 .long {
     width: 100%;
+    &.restrict-width {
+        max-width: 600px;
+    }
 }
 
 button:not(.el-button--text) {
@@ -315,6 +326,10 @@ h1, h2 {
 }
 h1 { font-size: 1.4rem !important; font-weight: 200 !important; }
 h2 { font-size: 1rem !important; }
+
+.infobox {
+    padding: 1rem;
+}
 
 .tip {
     font-size: 0.75rem;
