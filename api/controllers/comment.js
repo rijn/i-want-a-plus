@@ -6,17 +6,17 @@ const { ServerError } = require('../middleware/error-handler');
 
 exports.get = (options) => {
     let tasks = [
-        pick([ 'CourseId', 'SectionId', 'ProfessorId', 'id' ]),
-        conditions => _.join(_.map(conditions, (v, k) => `Comments.${k}=` + _.escape(v)), ' AND '),
+        pick([ 'CourseId', 'SectionId', 'id' ]),
+        conditions => _.join(_.map(conditions, (v, k) => `cond$${k}=` + _.escape(parseInt(v))), ' AND '),
         (conditions) => {
             return _.query(`
                 SELECT
-                    Comments.id,
+                    DISTINCT Comments.id,
+                    Comments.id as cond$id,
                     Comments.content, Comments.rating,
                     Comments.createdAt, Comments.updatedAt,
-                    Courses.id as Course_id,
-                    Sections.id as Section_id,
-                    Professors.id as Professor_id
+                    CASE WHEN Courses.id IS NULL THEN Sections.CourseId ELSE Courses.id END AS cond$CourseId,
+                    Sections.id as cond$SectionId
                 FROM Comments
                     LEFT JOIN Users
                     ON Comments.UserId = Users.id
@@ -24,8 +24,6 @@ exports.get = (options) => {
                     ON Comments.CourseId = Courses.id
                     LEFT JOIN Sections
                     ON Comments.SectionId = Sections.id
-                    LEFT JOIN Professors
-                    ON Comments.ProfessorId = Professors.id
                 WHERE ${conditions};
             `, {
                 type: QueryTypes.SELECT
