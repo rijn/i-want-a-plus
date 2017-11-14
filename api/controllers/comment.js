@@ -76,12 +76,36 @@ exports.update = (object, options) => {
             return checkUserAndComment(options.id, options.mw.user.id);
         },
         () => {
-            return _.query(`UPDATE Comments
-                            SET content = \'${object.content}\'
-                            WHERE Comments.id = ${options.id}`)
-            .then((result) => {
-                return "Update Success";
-            });
+            if (object.content && !object.rating ){
+              return _.query(`UPDATE Comments
+                              SET content = \'${object.content}\'
+                              WHERE Comments.id = ${options.id}`)
+              .then((result) => {
+                  return "Update Comment Success";
+              });
+            }
+            if (!object.content && object.rating){
+              return _.query(`UPDATE Comments
+                              SET rating = \'${object.rating}\'
+                              WHERE Comments.id = ${options.id}`)
+              .then((result) => {
+                  return "Update Rating Success";
+              });
+            }
+            if (object.content && object.rating){
+              return _.query(`UPDATE Comments
+                              SET content = \'${object.content}\', rating = \'${object.rating}\'
+                              WHERE Comments.id = ${options.id}`)
+              .then((result) => {
+                  return "Update Both Comment and Rating Success";
+              });
+            }
+            // return _.query(`UPDATE Comments
+            //                 SET content = \'${object.content}\'
+            //                 WHERE Comments.id = ${options.id}`)
+            // .then((result) => {
+            //     return "Update Success";
+            // });
         }
     ];
 
