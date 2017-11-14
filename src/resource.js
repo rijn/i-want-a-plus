@@ -35,6 +35,7 @@ export default class Resource {
         this.models = models;
 
         this.models.course.addComment = _.curry(this.models.course.addComment, 2);
+        this.models.comment.update = _.curry(this.models.comment.update, 2);
         this.models.course.getComment = function (arg) { return function () { return models.course.getCommentDelegate(arg); }; };
 
         Vue.prototype.$api = this.models;

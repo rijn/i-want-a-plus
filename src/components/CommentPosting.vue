@@ -1,5 +1,5 @@
 <template>
-    <el-container class="long" v-if="isLogin" direction="vertical">
+    <el-card class="long no-padding" v-if="isLogin" direction="vertical">
         <template v-if="success">
             <el-alert
                 title="Post successfully"
@@ -14,14 +14,14 @@
                 <el-input
                     type="textarea"
                     :autosize="{ minRows: 2, maxRows: 4 }"
-                    :maxlength="140"
+                    :maxlength="300"
                     placeholder="Add comments... (optional)"
-                    class="long"
+                    class="long no-style"
                     resize="none"
                     v-model="content">
                 </el-input>
             </el-row>
-            <el-row class="inline" style="padding: 0.5rem 0;">
+            <el-row class="inline" style="padding: 0.5rem 0 0 0;">
                 <div style="float: left;">
                     <el-rate
                         v-model="rating"
@@ -34,7 +34,7 @@
                 </div>
             </el-row>
         </template>
-    </el-container>
+    </el-card>
     <el-container class="long" v-else>
         <router-link :to="{ name: 'LoginPage' }"><el-button>Login to post comment</el-button></router-link>
     </el-container>
@@ -43,7 +43,7 @@
 <script>
 import {
     Button, Form, FormItem, Input, Select, Option, OptionGroup, Autocomplete, Tag,
-    Container, Aside, Main, Header, Row, Alert, Switch, Rate
+    Container, Aside, Main, Header, Row, Alert, Switch, Rate, Card
 } from 'element-ui';
 import _ from 'lodash';
 import { mapGetters } from 'vuex';
@@ -68,7 +68,8 @@ export default {
         'el-row': Row,
         'el-alert': Alert,
         'el-switch': Switch,
-        'el-rate': Rate
+        'el-rate': Rate,
+        'el-card': Card
     },
 
     computed: {
@@ -78,6 +79,9 @@ export default {
     props: {
         endpoint: {
             type: Function
+        },
+        comment: {
+            type: Object
         }
     },
 
@@ -101,9 +105,18 @@ export default {
     },
 
     mounted () {
+        if (this.comment) {
+            _.each(this.comment, (v, k) => {
+                this[k] = v;
+            });
+        }
     }
 };
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
+.no-style > textarea {
+    border: 0;
+    padding: 0;
+}
 </style>
