@@ -14,6 +14,12 @@ try {
 module.exports = merge(prodConf, {
     'db': process.env.REMOTE_DB ? {
         database: 'iwap-test'
+    } : process.env.LOCAL_POSTGRES ? {
+        host: 'localhost',
+        username: '',
+        password: '',
+        database: 'iwap',
+        logging: true,
     } : {
         dialect: 'sqlite',
         storage: './dev.db',

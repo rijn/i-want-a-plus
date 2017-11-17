@@ -41,13 +41,16 @@ exports.updateCsv = (options) => {
             return Promise.each(data, item => {
                 let professor, course, section;
                 return models.Professor.findOrCreate({
-                    where: extractName(item.professor)
+                    where: extractName(item.professor),
+                    default: { SchoolId: 1 },
+                    include: [ models.School ]
                 }).then(_professor => {
                     professor = _professor[0];
                 }).then(() => {
                     return models.Course.findOrCreate({
                         where: _.pick(item, [ 'subject', 'course' ]),
-                        defaults: { title: item.title }
+                        defaults: { title: item.title, SchoolId: 1 },
+                        include: [ models.School ]
                     });
                 }).then(_course => {
                     course = _course[0];

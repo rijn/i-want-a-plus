@@ -3,6 +3,7 @@ import Router from 'vue-router';
 import store from '../store';
 const Hello = resolve => require(['@/components/Hello'], resolve);
 const LoginPage = resolve => require(['@/components/LoginPage'], resolve);
+const SignupPage = resolve => require(['@/components/SignupPage'], resolve);
 const CoursePage = resolve => require(['@/components/CoursePage'], resolve);
 const CourseOverviewPage = resolve => require(['@/components/CourseOverviewPage'], resolve);
 const MyCommentPage = resolve => require(['@/components/MyCommentPage'], resolve);
@@ -21,6 +22,11 @@ let router = new Router({
         name: 'LoginPage',
         component: LoginPage,
         meta: { title: 'Login' }
+    }, {
+        path: '/signup',
+        name: 'SignupPage',
+        component: SignupPage,
+        meta: { title: 'Sign up' }
     }, {
         path: '/course',
         name: 'CoursePage',

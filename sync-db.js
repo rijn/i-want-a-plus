@@ -24,6 +24,7 @@ Promise.resolve().then(() => {
     Spinner.message('Creating default data...');
     return models.sequelize.transaction(function (t1) {
         return Promise.all([
+            models.School.create({ name: 'UIUC' }),
             models.Group.create({ name: 'default' }),
             models.Group.create({ name: 'admin' }),
             models.Permission.create({ name: 'view_profile', GroupId: 1 }, {

@@ -22,6 +22,7 @@ export default class Resource {
         let models = {
             user: Vue.resource('user{/id}', {}, {
                 login: { method: 'POST', url: 'user/login' },
+                signup: { method: 'POST', url: 'user' },
                 getComment: { method: 'GET', url: 'user/comment' }
             }),
             course: Vue.resource('course{/id}', {}, {

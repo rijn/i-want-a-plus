@@ -1,24 +1,22 @@
 <template>
     <el-container id="hello">
-        <h1>iWantA+</h1>
+        <Logo desaturated :style="{ opacity: 0.3 }"></Logo>
     </el-container>
 </template>
 
 <script>
 import { Container } from 'element-ui';
+import Logo from './Logo';
 
 export default {
     name: 'Hello',
 
-    components: { 'el-container': Container },
+    components: { 'el-container': Container, Logo },
 
     data () {
         return {
             response: null
         };
-    },
-
-    mounted () {
     }
 };
 </script>

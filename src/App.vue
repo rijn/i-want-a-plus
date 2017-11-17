@@ -82,6 +82,14 @@ html, body {
 
 // Override
 
+a {
+    color: #248add;
+    text-decoration: none;
+    &:hover {
+        color: lighten(#248add, 10%);
+    }
+}
+
 .long {
     width: 100%;
     &.restrict-width {
@@ -207,6 +215,7 @@ h2 { font-size: 1rem !important; }
 
 .inline > * {
     display: inline-block;
+    vertical-align: middle;
 }
 .inline.padding > *:not(:last-child) {
     padding-right: 0.5rem;

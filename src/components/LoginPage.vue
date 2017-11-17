@@ -1,9 +1,7 @@
 <template>
     <section class="wrap main-page">
         <div class="container">
-            <div class="logo">
-                <h1>iWantA+</h1>
-            </div>
+            <Logo inline :size="25" :style="{ padding: '2em 0' }"></Logo>
             <el-form ref="form" :model="form" label-width="0px">
                 <el-form-item>
                     <el-input v-model="form.email" placeholder="Email"></el-input>
@@ -14,6 +12,7 @@
                 </el-form-item>
                 <el-form-item>
                     <el-button @click="onSubmit" :loading="loading" class="long">Login</el-button>
+                    <router-link :to="{ name: 'SignupPage' }">Sign up</router-link>
                 </el-form-item>
             </el-form>
         </div>
@@ -23,6 +22,7 @@
 <script>
 import { Button, Form, FormItem, Input } from 'element-ui';
 import { mapGetters, mapActions } from 'vuex';
+import Logo from './Logo';
 
 export default {
     name: 'LoginPage',
@@ -31,7 +31,8 @@ export default {
         'el-button': Button,
         'el-input': Input,
         'el-form': Form,
-        'el-form-item': FormItem
+        'el-form-item': FormItem,
+        Logo
     },
 
     computed: {
@@ -82,16 +83,10 @@ export default {
 
 <style lang="less" scoped>
 section.wrap {
-    flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
-    overflow-y: auto;
-    overflow-y: overlay;
     text-align: center;
-
-    height: 100%;
 
     .container {
         width: 300px;

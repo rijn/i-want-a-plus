@@ -3,7 +3,7 @@
         <header>
             <router-link :to="{ path: '/' }" class="nav-link" active-class="active">
                 <div class="wrap">
-                    I Want A+
+                    <Logo inline desaturated :size="16"></Logo>
                 </div>
             </router-link>
         </header>
@@ -24,13 +24,15 @@
 import Navigator from './Navigator';
 import { Aside } from 'element-ui';
 import { mapGetters, mapActions } from 'vuex';
+import Logo from './Logo';
 
 export default {
     name: 'Aside',
 
     components: {
         'el-aside': Aside,
-        Navigator
+        Navigator,
+        Logo
     },
 
     computed: {
