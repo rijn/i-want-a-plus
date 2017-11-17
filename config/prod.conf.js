@@ -1,31 +1,18 @@
 const path = require('path');
 
 module.exports = {
-    // 'db': {
-    //     dialect: 'mysql',
-    //     host: 'fa17-cs411-02.cs.illinois.edu',
-    //     port: 3306,
-    //     username: 'simple',
-    //     password: 's0metimesNaive*',
-    //     database: 'iWantAPlus',
-    //     pool: {
-    //         max: 5,
-    //         min: 0,
-    //         idle: 10000
-    //     },
-    //     logging: false,
-    //     define: {
-    //         underscored: false
-    //     }
-    // },
     'db': {
-        dialect: 'sqlite',
-        storage: './dev.db',
-        host: 'localhost',
-        user: 'root',
-        password: 'root',
-        database: 'nodecho',
-        logging: true,
+        dialect: 'postgres',
+        host: 'fa17-cs411-02.cs.illinois.edu',
+        username: 'user',
+        password: 'Xweg6LTqndkuetCX',
+        database: 'iwap',
+        pool: {
+            max: 5,
+            min: 0,
+            idle: 10000
+        },
+        logging: false,
         define: {
             underscored: false
         }

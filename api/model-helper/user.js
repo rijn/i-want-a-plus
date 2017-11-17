@@ -22,12 +22,8 @@ module.exports = {
     },
     create: (options) => {
         let { email, password } = options;
-        // salt = random(16);
         let salt = bcrypt.genSaltSync(10);
         return bcrypt.hash(password, salt)
-        // return scrypt
-        //     .kdf(password + salt, { N: 2, r: 1, p: 1 })
-        //     .then(result => result.toString('base64'))
             .then(password => {
                 return models.User.create({
                     email, password, salt,
@@ -51,11 +47,9 @@ module.exports = {
         let inputPassword = password;
         return findByEmail(email).then(({ password, salt }) => {
             return bcrypt.compare(inputPassword, password);
-            // return scrypt
-            //     .verifyKdf(Buffer.from(password, 'base64'), inputPassword + salt);
         }).then(result => {
             if (!result) {
-                throw new errorHandler.ServerError({ statusCode: 401 });
+                throw new errorHandler.ServerError({ message: 'Incorrect combination of email and password', statusCode: 401 });
             }
             return options;
         });

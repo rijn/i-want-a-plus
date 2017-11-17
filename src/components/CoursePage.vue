@@ -1,5 +1,5 @@
 <template>
-    <el-container class="wrap">
+    <el-container class="main-page">
         <el-container>
             <el-header ref="courseHeader" height="auto" class="border bottom">
                 <div>
@@ -334,17 +334,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.wrap {
-    background: #fefefe;
-    height: 100%;
-
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 230px;
-    right: 0;
-}
-
 header {
     & > div {
         padding: 5px;

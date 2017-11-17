@@ -3,15 +3,19 @@
         <div
             v-if="deletable"
             style="padding: 0 1rem 0 0; display: flex; align-items: center; justify-content: center;">
-            <el-button type="danger" round icon="el-icon-delete" @click="onDelete"></el-button>
+            <a @click="onDelete" class="delete-button">
+                <i class="icon ion-trash-a inactive"></i>
+                <i class="icon ion-trash-a active"></i>
+            </a>
         </div>
-        <el-card class="box-card long">
+        <el-card class="box-card long"p>
             <p>{{comment.content || '(no content)'}}</p>
             <el-row class="inline">
                 <el-rate
                     v-model="comment.rating"
                     show-score
-                    disabled>
+                    disabled
+                    :colors="['#99A9BF', '#F7BA2A', '#FF9900']">
                 </el-rate>
                 <span style="float: right; line-height: 1.3rem;" class="tip">{{ago}} ago</span>
             </el-row>
@@ -78,4 +82,36 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.delete-button {
+    font-size: 1.3rem;
+
+    height: 30px;
+    width: 30px;
+    line-height: 30px;
+    text-align: center;
+
+    border-radius: 100%;
+    border: solid 2px #FA5555;
+
+    transition: all .1s ease;
+
+    font-weight: 400;
+
+    color: #FA5555;
+
+    cursor: pointer;
+    & > .active {
+        display: none;
+    }
+    &:hover {
+        background: #FA5555;
+        color: #fff;
+        & > .inactive {
+            display: none;
+        }
+        & > .active {
+            display: block;
+        }
+    }
+}
 </style>

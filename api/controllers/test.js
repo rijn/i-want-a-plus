@@ -4,7 +4,7 @@ var pipeline = require('../utils/pipeline');
 module.exports = (options) => {
     var tasks = [
         (options) => {
-            return models.sequelize.query('SELECT VERSION();', { type: models.sequelize.QueryTypes.SELECT });
+            return models.sequelize.query('SELECT 1+1=2;', { type: models.sequelize.QueryTypes.SELECT });
         }
     ];
 

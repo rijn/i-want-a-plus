@@ -1,12 +1,27 @@
-const Q = require('q');
+const Promise = require('bluebird');
 
 var models = require('./models');
 
-module.exports = Q.fcall(() => {
+var Spinner = require('clui').Spinner;
+
+if (process.env.NODE_ENV !== 'dev') {
+    let config = models.config;
+    console.log(`Connecting [${config.database}]:[${config.host}] via [${config.dialect}] with [${config.username}]`);
+}
+
+Promise.resolve().then(() => {
+    return require('@justinc/yesno')({ message: 'confirm?' });
+}).then((answer) => {
+    if (!answer.yes) throw new Error('canceled');
+}).delay(500).then(() => {
+    Spinner = new Spinner('Authenticating...  ');
+    Spinner.start();
     return models.sequelize.authenticate();
-}).then(() => {
-    return models.sequelize.sync({ force: true, logging: true });
-}).then(() => {
+}).delay(500).then(() => {
+    Spinner.message('Syncing...       ');
+    return models.sequelize.sync({ force: true, logging: false });
+}).delay(500).then(() => {
+    Spinner.message('Creating default data...');
     return models.sequelize.transaction(function (t1) {
         return Promise.all([
             models.Group.create({ name: 'default' }),
@@ -19,4 +34,8 @@ module.exports = Q.fcall(() => {
             })
         ]);
     });
-}).done();
+}).done(() => {
+    Spinner.stop();
+    models.sequelize.close();
+    console.log('sync finished.');
+});

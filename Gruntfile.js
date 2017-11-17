@@ -26,10 +26,13 @@ module.exports = function (grunt) {
     grunt.initConfig({
         shell: {
             build: {
-                command: 'node ./build/build.js'
+                command: 'node ./build/build.js --colors'
+            },
+            syncDb: {
+                command: 'node ./sync-db.js --colors'
             },
             restartTest: {
-                command: 'pm2 restart i-want-a-plus'
+                command: 'pm2 restart iwap'
             },
             buildTheme: {
                 command: 'node_modules/.bin/et -c element-variables.scss -o src/styles/theme'
@@ -67,6 +70,9 @@ module.exports = function (grunt) {
             },
             dev: {
                 NODE_ENV: 'dev'
+            },
+            remoteDb: {
+                REMOTE_DB: true
             },
             test: {
                 NODE_ENV: 'test'
@@ -127,11 +133,30 @@ module.exports = function (grunt) {
             tasks.push('shell:buildTheme');
         }
 
+        if (grunt.option('remote')) {
+            tasks.push('env:remoteDb');
+        }
+
         tasks = tasks.concat([
             'eslint',
             'env:dev',
             'express:dev',
             target === 'client' ? 'keepalive' : 'watch:server'
+        ]);
+
+        grunt.task.run(tasks);
+    });
+
+    grunt.registerTask('sync', function (target) {
+        let tasks = [];
+
+        if (grunt.option('remote')) {
+            tasks.push('env:remoteDb');
+        }
+
+        tasks = tasks.concat([
+            'env:dev',
+            'shell:syncDb'
         ]);
 
         grunt.task.run(tasks);

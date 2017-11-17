@@ -1,5 +1,5 @@
 <template>
-    <section class="wrap">
+    <section class="wrap main-page">
         <div class="container">
             <div class="logo">
                 <h1>iWantA+</h1>

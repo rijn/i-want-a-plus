@@ -5,7 +5,7 @@
                 <CommentView :comment="comment"
                     :deletable="deletable" @delete="loadComments"
                     @dblclick.native="onDblclick(idx)" v-if="!comment.editing"></CommentView>
-                <CommentPosting :comment="comment" :endpoint="$api.comment.update({ id: comment.id })" v-else></CommentPosting>
+                <CommentPosting :comment="comment" :endpoint="$api.comment.update({ id: comment.id })" v-else @post="afterUpdate(idx)"></CommentPosting>
             </li>
         </ul>
         <div class="infobox" v-else>
@@ -46,6 +46,10 @@ export default {
         deletable: {
             type: Boolean,
             default: false
+        },
+        editable: {
+            type: Boolean,
+            default: false
         }
     },
 
@@ -59,15 +63,16 @@ export default {
         loadComments () {
             (_.isFunction(this.endpoint) ? this.endpoint.apply(this) : this.endpoint).then(res => {
                 res.body = _.map(res.body, comment => _.assign(comment, { editing: false }));
-                console.log(res.body);
                 this.comments = res.body;
             }).catch(e => {
                 this.$error(e.body);
             });
         },
         onDblclick (idx) {
-            this.comments[idx].editing = true;
-            // this.$set(this, `comments[${idx}].editing`, true);
+            this.comments[idx].editing = this.editable && true;
+        },
+        afterUpdate (idx) {
+            this.loadComments();
         }
     },
 

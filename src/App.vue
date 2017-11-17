@@ -162,6 +162,14 @@ html.hairlines.chrome .border.left {
     cursor: pointer;
 }
 
+.main-page {
+    position: absolute;
+    left: 230px;
+    right: 0;
+    top: 0;
+    bottom: 0;
+}
+
 .full-list {
     li {
         padding: 10px;

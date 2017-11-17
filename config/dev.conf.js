@@ -12,14 +12,16 @@ try {
 };
 
 module.exports = merge(prodConf, {
-    'db': {
+    'db': process.env.REMOTE_DB ? {
+        database: 'iwap-test'
+    } : {
         dialect: 'sqlite',
         storage: './dev.db',
         host: 'localhost',
         user: 'root',
         password: 'root',
         database: 'nodecho',
-        logging: true,
+        logging: false,
         define: {
             underscored: false
         }

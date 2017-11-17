@@ -20,7 +20,7 @@
             </div>
         </div>
         <el-row class="long restrict-width">
-            <CommentList :endpoint="$api.user.getComment" deletable></CommentList>
+            <CommentList :endpoint="$api.user.getComment" deletable editable></CommentList>
         </el-row>
     </el-container>
 </template>
