@@ -2,7 +2,7 @@
     <el-container>
         <el-container v-if="professor" direction="vertical">
             <el-row class="infobox inline border bottom">
-                <h1>{{ professor.firstName }}</h1>&nbsp;&nbsp;<h1><b>{{ professor.lastName }}</b></h1>
+                <h1><b>{{ professor.lastName }}</b></h1>, <h1>{{ professor.firstName }}</h1>
             </el-row>
             <el-main>
                 <div ref="scatter" v-if="scatterSwitch" :style="{ width: '100%', height: '100%' }">

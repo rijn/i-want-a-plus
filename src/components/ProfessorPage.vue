@@ -13,8 +13,8 @@
                         <i slot="prefix"
                             class="el-input__icon el-icon-search"></i>
                         <template slot-scope="props">
+                            <b><span class="name">{{ props.item.lastName }}</span></b>,
                             <span class="key">{{ props.item.firstName }}</span>
-                            <b><span class="name">{{ props.item.lastName }}</span></b>
                         </template>
                     </el-autocomplete>
                 </div>
