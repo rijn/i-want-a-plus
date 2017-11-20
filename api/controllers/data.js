@@ -66,7 +66,12 @@ exports.updateCsv = (options) => {
                 }).then(_section => {
                     section = _section[0];
                     if (!section.PastSectionId) {
-                        return models.PastSection.create(_.pick(item, _.keys(models.PastSection.rawAttributes)));
+                        return models.PastSection.create(
+                            _.mapValues(
+                                _.pick(item, _.keys(models.PastSection.rawAttributes)),
+                                v => _.isNumber(v) ? v : 0
+                            )
+                        );
                     }
                 }).then(newPastSection => {
                     if (newPastSection) {

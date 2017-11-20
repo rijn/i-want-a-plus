@@ -97,7 +97,7 @@ export default {
                 name: 'ProfessorOverviewPage',
                 params: { professorId: id }
             });
-            this.professorName = `${firstName} ${lastName}`;
+            this.professorName = `${lastName}, ${firstName}`;
         }
     },
 
