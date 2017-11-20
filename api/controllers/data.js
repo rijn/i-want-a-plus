@@ -69,7 +69,7 @@ exports.updateCsv = (options) => {
                         return models.PastSection.create(
                             _.mapValues(
                                 _.pick(item, _.keys(models.PastSection.rawAttributes)),
-                                v => _.isNumber(v) ? v : 0
+                                (v, k) => v === 'N/A' ? 0 : v
                             )
                         );
                     }
