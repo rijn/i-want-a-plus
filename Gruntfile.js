@@ -74,6 +74,9 @@ module.exports = function (grunt) {
             remoteDb: {
                 REMOTE_DB: true
             },
+            localPostgres: {
+                LOCAL_POSTGRES: true
+            },
             test: {
                 NODE_ENV: 'test'
             }
@@ -135,6 +138,10 @@ module.exports = function (grunt) {
 
         if (grunt.option('remote')) {
             tasks.push('env:remoteDb');
+        }
+
+        if (grunt.option('local')) {
+            tasks.push('env:localPostgres');
         }
 
         tasks = tasks.concat([

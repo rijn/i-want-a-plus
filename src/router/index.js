@@ -8,6 +8,8 @@ const CoursePage = resolve => require(['@/components/CoursePage'], resolve);
 const CourseOverviewPage = resolve => require(['@/components/CourseOverviewPage'], resolve);
 const MyCommentPage = resolve => require(['@/components/MyCommentPage'], resolve);
 const SettingsPage = resolve => require(['@/components/SettingsPage'], resolve);
+const ProfessorPage = resolve => require(['@/components/ProfessorPage'], resolve);
+const ProfessorOverviewPage = resolve => require(['@/components/ProfessorOverviewPage'], resolve);
 
 Vue.use(Router);
 
@@ -33,13 +35,35 @@ let router = new Router({
         component: CoursePage,
         meta: { title: 'Course' }
     }, {
-        path: '/course/:id',
+        path: '/course/:courseId',
         component: CoursePage,
         children: [{
             path: 'overview',
             name: 'CourseOverviewPage',
             component: CourseOverviewPage,
             meta: { title: 'Course' }
+        }]
+    }, {
+        path: '/professor',
+        name: 'ProfessorPage',
+        component: ProfessorPage,
+        meta: { title: 'Professor' }
+    }, {
+        path: '/professor/:professorId',
+        component: ProfessorPage,
+        children: [{
+            path: 'overview',
+            name: 'ProfessorOverviewPage',
+            component: ProfessorOverviewPage,
+            meta: { title: 'Professor' }
+        }, {
+            path: 'course/:courseId',
+            name: 'ProfessorCoursePage',
+            components: {
+                default: ProfessorOverviewPage,
+                course: CourseOverviewPage
+            },
+            meta: { title: 'Professor' }
         }]
     }, {
         path: '/settings',

@@ -30,6 +30,9 @@ export default class Resource {
                 addComment: { method: 'POST', url: 'course{/id}/comment' },
                 getCommentDelegate: { method: 'GET', url: 'course{/id}/comment' }
             }),
+            professor: Vue.resource('professor{/id}', {}, {
+                ac: { method: 'GET', url: 'professor/ac' }
+            }),
             comment: Vue.resource('comment{/id}', {}, {})
         };
 

@@ -27,7 +27,7 @@ exports.calculateSD = calculateSD = instance => {
     return Math.sqrt(_.sum(_.map(_.zip(grade, value), n => (n[0] - meanGPA) * (n[0] - meanGPA) * n[1])) / _.sum(value));
 };
 
-exports.pastSectionReducer = pastSections => {
+exports.pastSectionReducer = pastSectionReducer = pastSections => {
     let defaultValue = _.reduce(pastSections, (collection, pastSection) => {
         _.each(dist, d => {
             if (!_.isNumber(pastSection[d])) return;
@@ -42,4 +42,8 @@ exports.pastSectionReducer = pastSections => {
     defaultValue.sd = defaultValue.averageGpa > 0 ? calculateSD(defaultValue) : 0;
 
     return defaultValue;
+};
+
+exports.SectionReducer = Sections => {
+    return pastSectionReducer(Sections.map(({ PastSection }) => PastSection));
 };

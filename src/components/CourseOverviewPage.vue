@@ -146,7 +146,7 @@ export default {
 
     methods: {
         getCourseId () {
-            this.courseId = this.$route.params.id;
+            this.courseId = this.$route.params.courseId;
         },
         reducer () {
             let dataSets = _.map(

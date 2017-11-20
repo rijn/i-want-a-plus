@@ -34,6 +34,11 @@ module.exports = function apiRoutes () {
     apiRouter.get('/course/:id',
         api.wrapper(require('./controllers/course').getById));
 
+    apiRouter.get('/professor/ac',
+        api.wrapper(require('./controllers/professor').ac));
+    apiRouter.get('/professor/:id',
+        api.wrapper(require('./controllers/professor').getById));
+
     apiRouter.post('/comment',
         authPrivate,
         api.wrapper(require('./controllers/comment').post));

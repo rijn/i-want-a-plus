@@ -67,7 +67,7 @@
                 </ul>
             </el-main>
         </el-container>
-        <el-container class="border left" v-if="$route.params.id">
+        <el-container class="border left" v-if="$route.params.courseId">
             <el-header class="border bottom">
                 <router-link :to="{ name: 'CoursePage' }">
                     <el-button type="text" icon="el-icon-arrow-left">Collapse</el-button>

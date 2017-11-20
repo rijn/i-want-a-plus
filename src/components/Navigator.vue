@@ -40,8 +40,8 @@ export default {
                     Professor: {
                         icon: 'ion-ios-people-outline',
                         iconActive: 'ion-ios-people',
-                        v: { path: 'professor' },
-                        disabled: true
+                        v: { name: 'ProfessorPage' },
+                        disabled: false
                     }
                 },
                 Account: {
