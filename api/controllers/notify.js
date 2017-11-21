@@ -9,14 +9,18 @@ exports.getAllCourses = (options) => {
     let tasks = [
         (options) => {
             return _.query(`
-                SELECT CourseId
-                From Notifies
-                WHERE UserId = ${options.mw.user.id}
+                SELECT "Notifies"."id" as Notifies_id, "Courses"."id" as Courses_id, "Courses"."title" as Courses_title
+                From "Notifies", "CurrentSections", "Courses"
+                WHERE "Notifies"."id" = ${options.mw.user.id}
+                      and "Notifies"."id" = "CurrentSections"."id"
+                      and "Notifies"."id" = "Courses"."id"
             `, {
                 type: QueryTypes.SELECT
             });
         },
+        deserialize,
         (result) => {
+            console.log(result);
         }
     ];
 
@@ -63,6 +67,7 @@ exports.post = (object, options) => {
     let tasks = [
         (options) => {
             return _.query(`
+                INSERT INTO
             `, {
                 type: QueryTypes.INSERT
             });
