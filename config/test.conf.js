@@ -10,7 +10,7 @@ module.exports = merge(devConf, {
         host: 'localhost',
         user: 'root',
         password: 'root',
-        database: 'nodecho',
+        database: 'iwap',
         logging: false,
         define: {
             underscored: false

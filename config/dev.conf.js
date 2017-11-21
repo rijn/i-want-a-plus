@@ -24,9 +24,9 @@ module.exports = merge(prodConf, {
         dialect: 'sqlite',
         storage: './dev.db',
         host: 'localhost',
-        user: 'root',
-        password: 'root',
-        database: 'nodecho',
+        user: '',
+        password: '',
+        database: 'iwap',
         logging: false,
         define: {
             underscored: false
