@@ -9,6 +9,7 @@ const { paramExtract } = require('./utils');
 const _ = require('lodash');
 
 const commentController = require('./controllers/comment');
+const notifyController = require('./controllers/notify');
 
 module.exports = function apiRoutes () {
     var apiRouter = express.Router();
@@ -61,12 +62,8 @@ module.exports = function apiRoutes () {
     apiRouter.post('/notification',
         authPrivate,
         api.wrapper(() => {}));
-    apiRouter.delete('/notification/:id',
-        authPrivate,
-        api.wrapper(() => {}));
-    apiRouter.get('/user/notifications',
-        authPrivate,
-        api.wrapper(() => {}));
+    apiRouter.delete('/notification/:id', authPrivate, wrapper(notifyController.delete));
+    apiRouter.get('/user/notifications', authPrivate, wrapper(notifyController.getAllCourses));
 
     return apiRouter;
 };
