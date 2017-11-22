@@ -68,3 +68,5 @@ package-lock.json
 
 .DS_Store
 src/styles/theme/
+
+config/prod.*
