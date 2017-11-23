@@ -19,7 +19,7 @@ module.exports = merge(prodConf, {
         username: '',
         password: '',
         database: 'iwap',
-        logging: true,
+        logging: false,
     } : {
         dialect: 'sqlite',
         storage: './dev.db',
