@@ -10,6 +10,7 @@ const _ = require('lodash');
 
 const commentController = require('./controllers/comment');
 const notifyController = require('./controllers/notify');
+const favoriteController = require('./controllers/favorite');
 
 module.exports = function apiRoutes () {
     var apiRouter = express.Router();
@@ -64,6 +65,10 @@ module.exports = function apiRoutes () {
         api.wrapper(() => {}));
     apiRouter.delete('/notification/:id', authPrivate, wrapper(notifyController.delete));
     apiRouter.get('/user/notifications', authPrivate, wrapper(notifyController.getAllCourses));
+
+    apiRouter.get('/user/favorite', authPrivate, wrapper(favoriteController.getAllMyFavorite));
+    apiRouter.post('/favorite', authPrivate, wrapper(favoriteController.post));
+    apiRouter.delete('/favorite/:id', authPrivate, wrapper(favoriteController.delete));
 
     return apiRouter;
 };

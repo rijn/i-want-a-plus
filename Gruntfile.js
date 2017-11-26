@@ -161,6 +161,10 @@ module.exports = function (grunt) {
             tasks.push('env:remoteDb');
         }
 
+        if (grunt.option('local')) {
+            tasks.push('env:localPostgres');
+        }
+
         tasks = tasks.concat([
             'env:dev',
             'shell:syncDb'

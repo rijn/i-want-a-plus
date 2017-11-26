@@ -62,7 +62,7 @@
     "cross-spawn": "^5.0.1",
     "css-loader": "^0.28.0",
     "element-theme": "^2.0.1",
-    "element-theme-chalk": "^2.0.3",
+    "element-theme-chalk": "^2.0.5",
     "element-ui": "^2.0.5",
     "eslint": "^3.19.0",
     "eslint-config-standard": "^10.2.1",
