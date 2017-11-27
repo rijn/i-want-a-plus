@@ -23,7 +23,8 @@ export default class Resource {
             user: Vue.resource('user{/id}', {}, {
                 login: { method: 'POST', url: 'user/login' },
                 signup: { method: 'POST', url: 'user' },
-                getComment: { method: 'GET', url: 'user/comment' }
+                getComment: { method: 'GET', url: 'user/comment' },
+                getFavorite: { method: 'GET', url: 'user/favorite' }
             }),
             course: Vue.resource('course{/id}', {}, {
                 search: { method: 'GET', url: 'course' },
@@ -33,7 +34,8 @@ export default class Resource {
             professor: Vue.resource('professor{/id}', {}, {
                 ac: { method: 'GET', url: 'professor/ac' }
             }),
-            comment: Vue.resource('comment{/id}', {}, {})
+            comment: Vue.resource('comment{/id}', {}, {}),
+            favorite: Vue.resource('favorite{/id}', {}, {})
         };
 
         this.models = models;
@@ -42,6 +44,6 @@ export default class Resource {
         this.models.comment.update = _.curry(this.models.comment.update, 2);
         this.models.course.getComment = function (arg) { return function () { return models.course.getCommentDelegate(arg); }; };
 
-        Vue.prototype.$api = this.models;
+        Vue.$api = Vue.prototype.$api = this.models;
     };
 };

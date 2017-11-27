@@ -34,3 +34,5 @@ new Vue({
     template: '<App/>',
     components: { App }
 });
+
+store.dispatch('user/initialize');

@@ -1,1 +1,7 @@
+export const INITIALIZE = 'INITIALIZE';
+
 export const USER_LOGIN = 'USER_LOGIN';
+
+export const FAVORITE_ADD = 'FAVORITE_ADD';
+export const FAVORITE_REMOVE = 'FAVORITE_REMOVE';
+export const FAVORITE_RESET = 'FAVORITE_RESET';

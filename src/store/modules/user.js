@@ -22,13 +22,21 @@ const getters = {
 };
 
 const actions = {
-    login ({ commit, state }, { email = null, token = null } = {}) {
+    login ({ dispatch, commit, state }, { email = null, token = null } = {}) {
         commit(types.USER_LOGIN, { email, token });
+        dispatch('favorite/getFavoriteFromRemote', null, { root: true });
     },
     logout ({ commit, state }) {
         Message.success('You\'ve logged out.');
         router.go(router.currentRoute);
         commit(types.USER_LOGIN, { email: null, token: null });
+    },
+    initialize ({ dispatch, commit, state }) {
+        let token = store.get('user').token;
+        dispatch('login', {
+            email: store.get('user').email,
+            token: token
+        });
     }
 };
 
@@ -42,12 +50,6 @@ const mutations = {
 
         Vue.http.headers.common['Authorization'] = `Bearer ${token}`;
     }
-};
-
-if (store.get('user')) {
-    Vue.set(state, 'email', store.get('user').email);
-    let token = store.get('user').token;
-    Vue.set(state, 'token', token);
 };
 
 export default {

@@ -1,14 +1,21 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import user from './modules/user';
+import favorite from './modules/favorite';
+
+import createLogger from 'vuex/dist/logger';
 
 Vue.use(Vuex);
 
 const debug = process.env.NODE_ENV !== 'prod';
 
-export default new Vuex.Store({
+const store = new Vuex.Store({
     modules: {
-        user
+        user,
+        favorite
     },
-    strict: debug
+    strict: debug,
+    plugins: debug ? [ createLogger() ] : []
 });
+
+export default store;
