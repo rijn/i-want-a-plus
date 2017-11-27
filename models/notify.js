@@ -19,7 +19,6 @@ module.exports = (sequelize, DataTypes) => {
         }
     }, {
         timestamps: false,
-        underscored: true
     });
 
     return Notify;
