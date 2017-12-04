@@ -26,7 +26,7 @@ exports.get = (options) => {
         (options) => _.omit(options, [ 'ip', 'context', 'mw' ]),
         // pick(_.concat(_.keys(models.Course.rawAttributes), addiField)),
         (options) => _.assign(options,
-            _.chain(options).pick(likeField).mapValues(option => ({ [Op.like]: `%${option}%` })).value()
+            _.chain(options).pick(likeField).mapValues(option => ({ [Op.iLike]: `%${option}%` })).value()
         ),
         (options) => {
             return models.Course.findAll(_.assign({

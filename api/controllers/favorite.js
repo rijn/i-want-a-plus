@@ -64,7 +64,7 @@ exports.delete = (options) => {
                 type: QueryTypes.DELETE
             });
         },
-        () => {}
+        () => ({})
     ];
 
     return pipeline(tasks, options);
