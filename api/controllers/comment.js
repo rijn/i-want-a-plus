@@ -52,7 +52,7 @@ exports.post = (object, options) => {
                     UserId: options.mw.user.id
                 },
                 _.pick(options, 'CourseId', 'SectionId', 'ProfessorId'),
-                object
+                _.pick(object, 'rating', 'content')
             ), {
                 include: [ User, Course, Section, Professor ]
             });

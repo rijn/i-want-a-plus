@@ -26,9 +26,9 @@ module.exports = (sequelize, DataTypes) => {
 
     Comment.associate = models => {
         Comment.belongsTo(models.User);
-        Comment.belongsTo(models.Course, { constraint: false });
-        Comment.belongsTo(models.Section, { constraint: false });
-        Comment.belongsTo(models.Professor, { constraint: false });
+        Comment.belongsTo(models.Course, { constraints: false });
+        Comment.belongsTo(models.Section, { constraints: false });
+        Comment.belongsTo(models.Professor, { constraints: false });
     };
 
     return Comment;

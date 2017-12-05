@@ -20,7 +20,9 @@
                 </div>
             </el-header>
             <el-main>
-                <router-view></router-view>
+                <keep-alive>
+                    <router-view></router-view>
+                </keep-alive>
             </el-main>
         </el-container>
         <el-container class="border left" v-if="$route.params.courseId">

@@ -29,6 +29,7 @@ exports.calculateSD = calculateSD = instance => {
 
 exports.pastSectionReducer = pastSectionReducer = pastSections => {
     let defaultValue = _.reduce(pastSections, (collection, pastSection) => {
+        if (!pastSection) return collection;
         _.each(dist, d => {
             if (!_.isNumber(pastSection[d])) return;
             collection[d] = (collection[d] || 0) + (pastSection[d] || 0);
@@ -37,7 +38,7 @@ exports.pastSectionReducer = pastSectionReducer = pastSections => {
     }, { totalStudentCount: 0, averageGpa: 0, sd: 0 });
     if (_.isEmpty(pastSections)) return defaultValue;
     defaultValue.totalStudentCount = _.sum(_.map(pastSections, 'totalStudentCount'));
-    let totalGpa = _.sum(_.map(pastSections, pastSection => pastSection.totalStudentCount > 0 ? pastSection.averageGpa * pastSection.totalStudentCount : 0));
+    let totalGpa = _.sum(_.map(pastSections, pastSection => pastSection && pastSection.totalStudentCount > 0 ? pastSection.averageGpa * pastSection.totalStudentCount : 0));
     defaultValue.averageGpa = defaultValue.totalStudentCount > 0 ? (totalGpa / defaultValue.totalStudentCount) : 0;
     defaultValue.sd = defaultValue.averageGpa > 0 ? calculateSD(defaultValue) : 0;
 

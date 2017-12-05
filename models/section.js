@@ -4,6 +4,7 @@
 
 const Promise = require('bluebird');
 const _ = require('lodash');
+const Sequelize = require('sequelize');
 
 let { pastSectionReducer } = require('./utils');
 
@@ -39,6 +40,14 @@ module.exports = (sequelize, DataTypes) => {
         },
         section: {
             type: DataTypes.STRING
+        },
+        CurrentSectionId: {
+            type: DataTypes.INTEGER,
+            references: {
+                model: 'CurrentSections',
+                key: 'id',
+                deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
+            }
         }
     }, {
         paranoid: true,
@@ -53,8 +62,8 @@ module.exports = (sequelize, DataTypes) => {
 
     Section.associate = models => {
         Section.belongsTo(models.Course);
-        Section.belongsTo(models.CurrentSection, { constraint: false });
-        Section.belongsTo(models.PastSection, { constraint: false });
+        Section.belongsTo(models.CurrentSection, { constraints: false });
+        Section.belongsTo(models.PastSection, { constraints: false });
         Section.belongsToMany(models.Professor, {
             through: {
                 model: models.Teach,

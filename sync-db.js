@@ -22,58 +22,52 @@ Promise.resolve().then(() => {
     return models.sequelize.sync({ force: true, logging: false });
 }).delay(500).then(() => {
     Spinner.message('Creating default data...');
-    return models.sequelize.transaction(function (t1) {
-        return Promise.all([
-            models.School.create({ name: 'UIUC' }),
-            models.Group.create({ name: 'default' }),
-            models.Group.create({ name: 'admin' }),
-            models.Permission.create({ name: 'view_profile', GroupId: 1 }, {
-                include: [{ model: models.Group }]
-            }),
-            models.Permission.create({ name: 'upload_csv', GroupId: 2 }, {
-                include: [{ model: models.Group }]
-            })
-        ]);
-    });
+    return Promise.all([
+        models.School.create({ name: 'UIUC' }),
+        models.Group.create({ name: 'default' }),
+        models.Group.create({ name: 'admin' }),
+        models.Permission.create({ name: 'view_profile', GroupId: 1 }, {
+            include: [{ model: models.Group }]
+        }),
+        models.Permission.create({ name: 'upload_csv', GroupId: 2 }, {
+            include: [{ model: models.Group }]
+        })
+    ]);
 }).delay(500).then(() => {
-    return models.sequelize.query(
-        `
-    CREATE OR REPLACE FUNCTION avg_comment_rating()
-    RETURNS TRIGGER
-    AS
-    $avg_comment$
-    BEGIN
-      UPDATE "Courses"
-      SET "averageRating" = "Sub"."avgRating"
-      FROM
-          (
-            SELECT "Courses"."id" AS "sId", AVG("Comments"."rating") AS "avgRating"
-            FROM "Courses", "Comments"
-            WHERE "Courses"."id" = NEW."CourseId"
-            GROUP BY "Courses"."id"
-          ) AS "Sub"
-      WHERE "Courses"."id" = "Sub"."sId";
-      RETURN NEW;
-    END;
-    $avg_comment$ LANGUAGE plpgsql;
+    return models.sequelize.query(`
+        CREATE OR REPLACE FUNCTION avg_comment_rating()
+        RETURNS TRIGGER
+        AS
+        $avg_comment$
+        BEGIN
+            UPDATE "Courses"
+            SET "averageRating" = "Sub"."avgRating"
+            FROM (
+                SELECT "Courses"."id" AS "sId", AVG("Comments"."rating") AS "avgRating"
+                FROM "Courses", "Comments"
+                WHERE "Courses"."id" = NEW."CourseId"
+                GROUP BY "Courses"."id"
+            ) AS "Sub"
+            WHERE "Courses"."id" = "Sub"."sId";
+            RETURN NEW;
+        END;
+        $avg_comment$ LANGUAGE plpgsql;
 
-    CREATE TRIGGER updateAvgRating
-      AFTER INSERT OR UPDATE ON "Comments" FOR EACH ROW EXECUTE PROCEDURE avg_comment_rating();   `
-    );
+        CREATE TRIGGER updateAvgRating
+            AFTER INSERT OR UPDATE ON "Comments" FOR EACH ROW EXECUTE PROCEDURE avg_comment_rating();
+    `);
 }).delay(500).then(() => {
-    return models.sequelize.query(
-        `
-      CREATE VIEW Best_CommentRating
-      AS
-      SELECT "id", "subject", "course", "title", "averageRating"
-      FROM "Courses" AS "c1"
-      WHERE "c1"."averageRating" = (
-        SELECT MAX("averageRating")
-        FROM "Courses"
-        WHERE "c1"."subject" = "subject"
-      );
-             `
-    );
+    return models.sequelize.query(`
+        CREATE VIEW Best_CommentRating
+        AS
+        SELECT "id", "subject", "course", "title", "averageRating"
+        FROM "Courses" AS "c1"
+        WHERE "c1"."averageRating" = (
+            SELECT MAX("averageRating")
+            FROM "Courses"
+            WHERE "c1"."subject" = "subject"
+        );
+    `);
 }).done(() => {
     Spinner.stop();
     models.sequelize.close();

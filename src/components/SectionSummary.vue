@@ -2,6 +2,10 @@
     <section>
         <el-row class="inline">
             <h2>{{section.year}}</h2>&nbsp;<h2>{{section.term}}</h2>&nbsp;&nbsp;<h1>{{section.crn}}</h1>
+            <span v-if="section.CurrentSection" class="availability">
+                <i class="icon ion-close" style="color: #FA5555;" v-if="section.CurrentSection.availability === 3"></i>
+                <i class="icon ion-checkmark" style="color: #67C23A;" v-else></i>
+            </span>
         </el-row>
         <el-row class="inline info">
             <div class="inline padding">
@@ -58,5 +62,8 @@ export default {
             font-size: 0.675rem;
         }
     }
+}
+.availability {
+    padding-left: .5rem;
 }
 </style>

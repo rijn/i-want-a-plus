@@ -3,6 +3,9 @@
         <el-container v-if="course" direction="vertical">
             <el-row class="inline infobox">
                 <CourseSummary :course="course"></CourseSummary>
+                <div style="float: right;">
+                    <FavoriteButton :params="{ courseId }"></FavoriteButton>
+                </div>
             </el-row>
             <el-row class="inline infobox">
                 <el-tag v-for="(groupPreset, displayText) in groupPresets" size="small"
@@ -80,6 +83,7 @@ import CourseSummary from './CourseSummary';
 import SectionSummary from './SectionSummary';
 import CommentPosting from './CommentPosting';
 import CommentList from './CommentList';
+import FavoriteButton from './FavoriteButton';
 import _ from 'lodash';
 import { pastSectionReducer, mapObjectOrArray, gradeText } from '../../models/utils';
 import Plotly from 'plotly.js';
@@ -109,7 +113,8 @@ export default {
         CourseSummary,
         SectionSummary,
         CommentPosting,
-        CommentList
+        CommentList,
+        FavoriteButton
     },
 
     props: {

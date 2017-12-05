@@ -6,7 +6,6 @@ mixin(_);
 const { ServerError } = require('../middleware/error-handler');
 
 exports.getAllMyFavorite = (options) => {
-    console.log(options)
     let tasks = [
         (options) => {
             return _.query(`
@@ -65,7 +64,7 @@ exports.delete = (options) => {
                 type: QueryTypes.DELETE
             });
         },
-        () => {}
+        () => ({})
     ];
 
     return pipeline(tasks, options);
@@ -81,12 +80,14 @@ exports.post = (object, options) => {
         },
         (params) => {
             return _.query(`
-                INSERT INTO "Favorites" (` + _.map(params, (v, k) => `"${k}"`).join(',') + `) VALUES (` + _.fill(Array(_.keys(params).length), '?').join(',') + `);
+                INSERT INTO "Favorites" (` + _.map(params, (v, k) => `"${k}"`).join(',') + `) VALUES (` + _.fill(Array(_.keys(params).length), '?').join(',') + `) RETURNING id;
             `, {
                 raw: true,
                 replacements: _.map(_.values(params), _.toNumber),
                 type: QueryTypes.INSERT
-            }).then(() => {}).catch(e => {
+            }).then(res => {
+                return { id: res[0][0].id };
+            }).catch(e => {
                 throw new ServerError({ message: 'key error', statusCode: 400 })
             });
         }

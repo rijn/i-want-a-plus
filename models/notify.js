@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             unique: 'notify'
         },
-        SectionId: {
+        CurrentSectionId: {
             type: DataTypes.INTEGER,
             unique: 'notify'
         }
