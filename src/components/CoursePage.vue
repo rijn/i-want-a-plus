@@ -43,6 +43,7 @@
                             size="small"
                             :type="filter.type"
                             @close="handleFilterClose(filter)"
+                            @click.native="handleFilterClose(filter)"
                             closable>
                             <b>#{{filter.displayKey}}</b> = {{filter.displayValue}}
                         </el-tag>
@@ -88,7 +89,7 @@ import {
 import CourseSummary from './CourseSummary';
 import _ from 'lodash';
 // eslint-disable-next-line
-import { SubjectMapBlurSearch, SubjectMapForward } from './subject';
+import { SubjectMapBlurSearch, SubjectMapForward, SubjectKeys } from './subject';
 import Plotly from 'plotly.js';
 // import { mapGetters, mapActions } from 'vuex';
 
@@ -181,10 +182,12 @@ export default {
 
     methods: {
         createLoadingInstance () {
-            this.loadingInstance = Loading.service({
-                target: this.$refs.courseHeader.$el,
-                background: 'rgba(255, 255, 255, 0.8)'
-            });
+            if (!this.loadingInstance) {
+                this.loadingInstance = Loading.service({
+                    target: this.$refs.courseHeader.$el,
+                    background: 'rgba(255, 255, 255, 0.8)'
+                });
+            }
         },
         closeLoadingInstance () {
             this.loadingInstance && this.loadingInstance.close();
@@ -214,7 +217,36 @@ export default {
                     return;
                 }
             }
-            this.searchInputValue = value;
+
+            let query = _.upperCase(value);
+            let words = _.compact(query.match(/([a-z]+)/gi));
+            let subjects = _.intersection(words, SubjectKeys);
+            if (!_.isEmpty(subjects)) {
+                _.each(subjects, subject => {
+                    if (!_.find(this.filters, { value: subject })) {
+                        this.filters.push(_.assign(_.cloneDeep(this.filterMap.subject), {
+                            value: subject,
+                            displayValue: this.filterMap.subject.remapDisplayValue(subject)
+                        }));
+                    }
+                });
+            }
+            words = _.difference(words, subjects);
+
+            let nums = _.compact(query.match(/([0-9]+)/g));
+            if (!_.isEmpty(nums)) {
+                _.each(nums, num => {
+                    if (!_.find(this.filters, { value: num })) {
+                        this.filters.push(_.assign(_.cloneDeep(this.filterMap.course), {
+                            value: num,
+                            displayValue: this.filterMap.course.remapDisplayValue(num)
+                        }));
+                    }
+                });
+            }
+
+            this.searchInputValue = _.join(words, ' ');
+
             this.onSearch();
         },
         onSearch () {

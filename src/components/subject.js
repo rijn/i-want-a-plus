@@ -185,6 +185,8 @@ export const SubjectMap = [
     { key: 'ZULU', value: 'Zulu' }
 ];
 
+export const SubjectKeys = _.map(SubjectMap, 'key');
+
 export const SubjectMapForward = (v) => {
     return _.find(SubjectMap, ({ key }) => key === v);
 };

@@ -4,7 +4,7 @@
 
 module.exports = (sequelize, DataTypes) => {
     var CurrentSection = sequelize.define('CurrentSection', {
-        availableSlot: {
+        availability: {
             type: DataTypes.INTEGER,
             allowNull: false,
             defaultValue: 0

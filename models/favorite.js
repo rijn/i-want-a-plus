@@ -11,9 +11,9 @@ module.exports = (sequelize, DataTypes) => {
     Favorite.associate = models => {
         Favorite.belongsTo(models.User);
 
-        Favorite.belongsTo(models.Professor, { constraint: false });
-        Favorite.belongsTo(models.Course, { constraint: false });
-        Favorite.belongsTo(models.Section, { constraint: false });
+        Favorite.belongsTo(models.Professor, { constraints: false });
+        Favorite.belongsTo(models.Course, { constraints: false });
+        Favorite.belongsTo(models.Section, { constraints: false });
     };
 
     return Favorite;

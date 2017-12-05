@@ -22,19 +22,17 @@ Promise.resolve().then(() => {
     return models.sequelize.sync({ force: true, logging: false });
 }).delay(500).then(() => {
     Spinner.message('Creating default data...');
-    return models.sequelize.transaction(function (t1) {
-        return Promise.all([
-            models.School.create({ name: 'UIUC' }),
-            models.Group.create({ name: 'default' }),
-            models.Group.create({ name: 'admin' }),
-            models.Permission.create({ name: 'view_profile', GroupId: 1 }, {
-                include: [{ model: models.Group }]
-            }),
-            models.Permission.create({ name: 'upload_csv', GroupId: 2 }, {
-                include: [{ model: models.Group }]
-            })
-        ]);
-    });
+    return Promise.all([
+        models.School.create({ name: 'UIUC' }),
+        models.Group.create({ name: 'default' }),
+        models.Group.create({ name: 'admin' }),
+        models.Permission.create({ name: 'view_profile', GroupId: 1 }, {
+            include: [{ model: models.Group }]
+        }),
+        models.Permission.create({ name: 'upload_csv', GroupId: 2 }, {
+            include: [{ model: models.Group }]
+        })
+    ]);
 }).done(() => {
     Spinner.stop();
     models.sequelize.close();
