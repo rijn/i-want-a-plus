@@ -36,8 +36,8 @@ Promise.resolve().then(() => {
         ]);
     });
 }).delay(500).then(() => {
-  return models.sequelize.query(
-    `
+    return models.sequelize.query(
+        `
     CREATE OR REPLACE FUNCTION avg_comment_rating()
     RETURNS TRIGGER
     AS
@@ -59,10 +59,10 @@ Promise.resolve().then(() => {
 
     CREATE TRIGGER updateAvgRating
       AFTER INSERT OR UPDATE ON "Comments" FOR EACH ROW EXECUTE PROCEDURE avg_comment_rating();   `
-  );
+    );
 }).delay(500).then(() => {
-  return models.sequelize.query(
-    `
+    return models.sequelize.query(
+        `
       CREATE VIEW Best_CommentRating
       AS
       SELECT "id", "subject", "course", "title", "averageRating"
@@ -73,7 +73,7 @@ Promise.resolve().then(() => {
         WHERE "c1"."subject" = "subject"
       );
              `
-  );
+    );
 }).done(() => {
     Spinner.stop();
     models.sequelize.close();
