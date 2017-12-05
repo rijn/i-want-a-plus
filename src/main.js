@@ -3,6 +3,7 @@ import App from './App';
 import store from './store';
 import router from './router';
 import resource from './resource';
+import VueParticles from 'vue-particles';
 
 import lang from 'element-ui/lib/locale/lang/en';
 import locale from 'element-ui/lib/locale';
@@ -25,6 +26,8 @@ Vue.prototype.$error = (errors) => {
     if (errors.message) errors = errors.message;
     Message.error(errors);
 };
+
+Vue.use(VueParticles);
 
 /* eslint-disable no-new */
 new Vue({

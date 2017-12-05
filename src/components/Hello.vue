@@ -1,27 +1,71 @@
 <template>
-    <el-container id="hello">
-        <Logo desaturated :style="{ opacity: 0.3 }"></Logo>
+    <el-container id="hello" direction="vertical">
+        <vue-particles
+            class="particles"
+            shapeType="triangle"
+            :particlesNumber="40"
+            :linesWidth="1"
+            :particleSize="5"
+            :linesDistance="200"
+            :moveSpeed="2"
+            :hoverEffect="false"
+            :clickEffect="false"
+        ></vue-particles>
+        <el-header class="header">
+            <h1>Top Rating Courses</h1>
+        </el-header>
+        <div class="main-container">
+            <ul>
+                <li v-for="course in courses">
+                    <div class="container">
+                        <CourseRatingCard :course="course" class="clickable" @click.native="handleClickCourseRating(course.id)"></CourseRatingCard>
+                    </div>
+                </li>
+            </ul>
+        </div>
     </el-container>
 </template>
 
 <script>
-import { Container } from 'element-ui';
+import { Container, Header, Main } from 'element-ui';
 import Logo from './Logo';
+import CourseRatingCard from './CourseRatingCard';
 
 export default {
     name: 'Hello',
 
-    components: { 'el-container': Container, Logo },
+    components: {
+        'el-container': Container,
+        'el-header': Header,
+        'el-main': Main,
+        Logo,
+        CourseRatingCard
+    },
 
     data () {
         return {
-            response: null
+            response: null,
+            courses: []
         };
+    },
+
+    methods: {
+        handleClickCourseRating (courseId) {
+            this.$router.push({ path: `/course/${courseId}/overview` });
+            // this.$router.push({ name: 'CourseOverviewPage', params: { courseId } });
+        }
+    },
+
+    mounted () {
+        this.$api.top.rating.get().then(({ body }) => {
+            console.log(body);
+            this.courses = body;
+        });
     }
 };
 </script>
 
-<style lang="less" scoped>
+<style lang='less' scoped>
 #hello {
     flex: 1;
 
@@ -30,13 +74,50 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
-
-    color: #ddd;
-
-    position: absolute;
-    left: 230px;
-    right: 0;
-    top: 0;
-    bottom: 0;
 }
+
+.main-container {
+    width: 100%;
+    z-index: 1;
+}
+
+.header {
+    padding: 3rem 0 1rem 30px;
+    width: 100%;
+    text-align: left;
+    h1 {
+        font-weight: 600 !important;
+    }
+    z-index: 1;
+}
+
+.particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 5px;
+
+    z-index: 0;
+}
+
+.clickable {
+    transition: box-shadow .3s;
+    &:hover {
+        box-shadow: 0 0 50px 0px rgba(0,0,0,.16);
+    }
+}
+
+ul {
+    padding: 20px;
+    li {
+        width: 50%;
+        display: inline-block;
+        float: left;
+        .container {
+            padding: 10px;
+        }
+    }
+}
+
 </style>

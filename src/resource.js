@@ -35,7 +35,10 @@ export default class Resource {
                 ac: { method: 'GET', url: 'professor/ac' }
             }),
             comment: Vue.resource('comment{/id}', {}, {}),
-            favorite: Vue.resource('favorite{/id}', {}, {})
+            favorite: Vue.resource('favorite{/id}', {}, {}),
+            top: {
+                rating: Vue.resource('toprating')
+            }
         };
 
         this.models = models;

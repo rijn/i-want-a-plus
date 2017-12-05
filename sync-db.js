@@ -45,7 +45,9 @@ Promise.resolve().then(() => {
             FROM (
                 SELECT "Courses"."id" AS "sId", AVG("Comments"."rating") AS "avgRating"
                 FROM "Courses", "Comments"
-                WHERE "Courses"."id" = NEW."CourseId"
+                WHERE
+                    "Courses"."id" = NEW."CourseId"
+                    AND "Courses"."id" = "Comments"."CourseId"
                 GROUP BY "Courses"."id"
             ) AS "Sub"
             WHERE "Courses"."id" = "Sub"."sId";
@@ -66,7 +68,7 @@ Promise.resolve().then(() => {
             SELECT MAX("averageRating")
             FROM "Courses"
             WHERE "c1"."subject" = "subject"
-        );
+        ) AND "c1"."averageRating" > 0;
     `);
 }).done(() => {
     Spinner.stop();
