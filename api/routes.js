@@ -65,9 +65,10 @@ module.exports = function apiRoutes () {
         apiRouter.post(endpoint, authPrivate, paramExtract(pe), wrapper(commentController.post));
     });
 
+    // Notification
     apiRouter.post('/notification',
         authPrivate,
-        api.wrapper(() => {}));
+        api.wrapper(require('./controllers/notify').post));
     apiRouter.delete('/notification/:id', authPrivate, wrapper(notifyController.delete));
     apiRouter.get('/user/notifications', authPrivate, wrapper(notifyController.getAllCourses));
 
@@ -77,4 +78,3 @@ module.exports = function apiRoutes () {
 
     return apiRouter;
 };
-

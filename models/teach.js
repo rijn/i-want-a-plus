@@ -20,8 +20,7 @@ module.exports = (sequelize, DataTypes) => {
             unique: 'teach'
         }
     }, {
-        timestamps: false,
-        underscored: true
+        timestamps: false
     });
 
     return Teach;
