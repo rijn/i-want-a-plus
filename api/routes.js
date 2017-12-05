@@ -11,6 +11,7 @@ const _ = require('lodash');
 const commentController = require('./controllers/comment');
 const notifyController = require('./controllers/notify');
 const favoriteController = require('./controllers/favorite');
+const topController = require('./controllers/top');
 
 module.exports = function apiRoutes () {
     var apiRouter = express.Router();
@@ -75,6 +76,9 @@ module.exports = function apiRoutes () {
     apiRouter.get('/user/favorite', authPrivate, wrapper(favoriteController.getAllMyFavorite));
     apiRouter.post('/favorite', authPrivate, wrapper(favoriteController.post));
     apiRouter.delete('/favorite/:id', authPrivate, wrapper(favoriteController.delete));
+
+    // TopRating professors
+    apiRouter.get('/toprating', wrapper(topController.getRating));
 
     return apiRouter;
 };
