@@ -26,6 +26,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.FLOAT,
             defaultValue: 0
         },
+        averageRating: {
+            type: DataTypes.FLOAT,
+            defaultValue: 0
+        },
         totalStudentCount: {
             type: DataTypes.INTEGER,
             defaultValue: 0

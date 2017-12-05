@@ -8,6 +8,12 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             allowNull: false,
             defaultValue: 0
+        },
+        day: {
+            type: DataTypes.STRING
+        },
+        time: {
+            type: DataTypes.STRING
         }
     }, {
         paranoid: true,
@@ -16,6 +22,13 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     CurrentSection.associate = models => {
+        CurrentSection.belongsToMany(models.User, {
+            through: {
+                model: models.Notify,
+                unique: false
+            },
+            foreignKey: 'CurrentSectionId'
+        });
     };
 
     return CurrentSection;

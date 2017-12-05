@@ -1,7 +1,7 @@
 const _ = require('lodash');
 const utils = require('../utils');
 const { pipeline, pick, deserialize } = require('../utils');
-const { User, Comment, Course, Section, Professor, sequelize: { QueryTypes }, mixin } = require('../../models');
+const { Notify, CurrentSection, User, Comment, Course, Section, Professor, sequelize: { QueryTypes }, mixin } = require('../../models');
 mixin(_);
 const { ServerError } = require('../middleware/error-handler');
 
@@ -9,11 +9,19 @@ exports.getAllCourses = (options) => {
     let tasks = [
         (options) => {
             return _.query(`
-                SELECT "Notifies"."id" as Notifies_id, "Courses"."id" as Courses_id, "Courses"."title" as Courses_title
-                From "Notifies", "CurrentSections", "Courses"
-                WHERE "Notifies"."id" = ${options.mw.user.id}
-                      and "Notifies"."id" = "CurrentSections"."id"
-                      and "Notifies"."id" = "Courses"."id"
+              SELECT
+                "Notifies"."id" as id,
+                "CurrentSections"."id" as "Course_id", "CurrentSections"."instructor" as "Professor_Name",
+                "CurrentSections"."subject" as "Course_subject"，
+                "CurrentSections"."section" as "Course_section"，
+                "CurrentSections"."status" as "Course_status"，
+
+              FROM "Notifies"
+                LEFT JOIN "CurrentSections"
+                  ON "Notifies"."SectionId" = "CurrentSections".id
+
+              WHERE "Notifies"."UserId" = ${options.mw.user.id};
+
             `, {
                 type: QueryTypes.SELECT
             });
@@ -31,48 +39,54 @@ exports.delete = (options) => {
     let tasks = [
         (options) => {
             return _.query(`
-                SELECT UserId, id
-                FROM Notifies
-                WHERE Notifies.id = ${options.id}
+                SELECT "UserId", id
+                FROM "Notifies"
+                WHERE "Notifies".id = ${_.toNumber(options.id)};
             `, {
                 type: QueryTypes.SELECT
             });
         },
         (result) => {
-            // Same User
-            if (result[0][0].UserId == options.mw.user.id){
-                return result[0][0].id;
+            if (!result[0]) {
+                throw new ServerError({ message: "key error", statusCode: 404 });
             }
-            else{
-                throw ServerError({ message: "Not your notification", statusCode: 400 });
+            if (result[0].UserId == options.mw.user.id){
+                return result[0].id;
+            } else {
+                throw new ServerError({ message: "Not your notification", statusCode: 409 });
             }
         },
-        (options) => {
+        (id) => {
             return _.query(`
-                DELETE FROM CourseId
-                WHERE CourseId.id = ${options}
+                DELETE FROM "Notifies"
+                WHERE "Notifies".id = ${id};
             `, {
                 type: QueryTypes.DELETE
             });
         },
-        (result) => {
-            return "DELETE Success";
-        }
+        () => {}
     ];
+
 
     return pipeline(tasks, options);
 };
 
 exports.post = (object, options) => {
-    let tasks = [
-        (options) => {
-            return _.query(`
-                INSERT INTO
-            `, {
-                type: QueryTypes.INSERT
-            });
-        }
-    ];
+  console.log(options);
+  let tasks = [
+      (options) => {
+          return Notify.create(_.assign(
+              {
+                  UserId: options.mw.user.id
+              },
+              _.pick(options, 'SectionId'),
+              object
+          ), {
+        //      include: [ User, CurrentSection ]
+          });
+      },
+      () => ({})
+  ];
 
     return pipeline(tasks, options);
 };

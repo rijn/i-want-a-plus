@@ -72,13 +72,7 @@ module.exports = (sequelize, DataTypes) => {
             foreignKey: 'SectionId'
         });
         Section.hasMany(models.Comment);
-        Section.belongsToMany(models.User, {
-            through: {
-                model: models.Notify,
-                unique: false
-            },
-            foreignKey: 'SectionId'
-        });
+
     };
 
     return Section;

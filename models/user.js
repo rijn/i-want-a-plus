@@ -39,7 +39,8 @@ module.exports = (sequelize, DataTypes) => {
         User.hasMany(models.Accesstoken);
         User.hasMany(models.Comment);
         User.belongsTo(models.Group);
-        User.belongsToMany(models.Section, {
+
+        User.belongsToMany(models.CurrentSection, {
             through: {
                 model: models.Notify,
                 unique: false
