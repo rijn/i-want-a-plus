@@ -6,9 +6,9 @@ uids = _.range(2);
 models.sequelize.authenticate().then(() => {
     return Promise.map(uids, uid => {
         return models.User.create({
-            email: 'abc@abc.com',
-            password: '1234345',
-            salt: '1234'
+            email: 'test@test.com',
+            password: '123456',
+            salt: ''
         }).then(user => {
             uid = user.id;
         }).then(() => {

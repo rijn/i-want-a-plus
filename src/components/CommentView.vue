@@ -17,7 +17,13 @@
                     disabled
                     :colors="['#99A9BF', '#F7BA2A', '#FF9900']">
                 </el-rate>
-                <span style="float: right; line-height: 1.3rem;" class="tip">{{ago}} ago</span>
+                <timeago
+                    style="float: right; line-height: 1.3rem;"
+                    class="tip"
+                    :since="this.comment.updatedAt"
+                    :auto-update="60">
+                </timeago>
+                <!-- <span style="float: right; line-height: 1.3rem;" class="tip">{{ago}} ago</span> -->
             </el-row>
         </el-card>
     </el-container>

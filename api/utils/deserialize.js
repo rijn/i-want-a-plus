@@ -8,7 +8,7 @@ const reducer = object => _.reduce(
 );
 
 const reduceNull = object => {
-    if (!_.isObjectLike(object)) {
+    if (!_.isObjectLike(object) || _.isDate(object)) {
         return object;
     } else {
         if (_.every(_.map(_.values(object), _.isNull))) {

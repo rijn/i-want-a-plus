@@ -4,6 +4,7 @@ import store from './store';
 import router from './router';
 import resource from './resource';
 import VueParticles from 'vue-particles';
+import VueTimeago from 'vue-timeago';
 
 import lang from 'element-ui/lib/locale/lang/en';
 import locale from 'element-ui/lib/locale';
@@ -28,6 +29,14 @@ Vue.prototype.$error = (errors) => {
 };
 
 Vue.use(VueParticles);
+
+Vue.use(VueTimeago, {
+    name: 'timeago',
+    locale: 'en-US',
+    locales: {
+        'en-US': require('vue-timeago/locales/en-US.json')
+    }
+});
 
 /* eslint-disable no-new */
 new Vue({
