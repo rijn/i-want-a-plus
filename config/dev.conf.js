@@ -2,14 +2,7 @@ const tryRequire = require('tryrequire');
 const path = require('path');
 const merge = require('lodash').merge;
 
-let prodConf = {};
-try {
-    prodConf = require('./prod.conf');
-} catch (e) {
-    if (e.code !== 'MODULE_NOT_FOUND') {
-        throw e;
-    }
-};
+let prodConf = require('try-require')('./prod.conf');
 
 module.exports = merge(prodConf, {
     'db': process.env.REMOTE_DB ? {
