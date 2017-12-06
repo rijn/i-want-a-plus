@@ -70,6 +70,18 @@ Promise.resolve().then(() => {
             WHERE "c1"."subject" = "subject"
         ) AND "c1"."averageRating" > 0;
     `);
+}).delay(500).then(() => {
+    return models.sequelize.query(`
+        CREATE VIEW best_gparating
+        AS
+        SELECT "id", "subject", "course", "title", "averageGpa"
+        FROM "Courses" AS "c1"
+        WHERE "c1"."averageGpa" = (
+            SELECT MAX("averageGpa")
+            FROM "Courses"
+            WHERE "c1"."subject" = "subject"
+        );
+    `);
 }).done(() => {
     Spinner.stop();
     models.sequelize.close();
