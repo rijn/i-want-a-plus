@@ -1,8 +1,6 @@
-const tryRequire = require('tryrequire');
 const path = require('path');
 const merge = require('lodash').merge;
-
-let prodConf = require('try-require')('./prod.conf');
+let prodConf = require('try-require')(path.join(__dirname, 'prod.conf'));
 
 module.exports = merge(prodConf, {
     'db': process.env.REMOTE_DB ? {
