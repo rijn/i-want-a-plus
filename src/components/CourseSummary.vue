@@ -8,7 +8,7 @@
                 <p v-if="course.averageRating">
                     <el-rate
                         class="small-rate"
-                        v-model="course.averageRating"
+                        v-model="course.averageRating && course.averageRating.toFixed(1)"
                         disabled
                         show-score
                         text-color="#ff9900"
