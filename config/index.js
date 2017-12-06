@@ -12,7 +12,7 @@ try {
 
 module.exports = merge(conf, {
     build: {
-        env: require('try-require')('./prod.env'),
+        env: require('./prod.env'),
         index: path.resolve(__dirname, '../dist/index.html'),
         assetsRoot: path.resolve(__dirname, '../dist'),
         assetsSubDirectory: 'static',
@@ -23,7 +23,7 @@ module.exports = merge(conf, {
         bundleAnalyzerReport: process.env.npm_config_report
     },
     dev: {
-        env: require('try-require')('./dev.env'),
+        env: require('./dev.env'),
         port: 8080,
         autoOpenBrowser: false,
         assetsSubDirectory: 'static',
