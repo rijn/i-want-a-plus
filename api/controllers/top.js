@@ -9,12 +9,14 @@ exports.getRating = (options) => {
     let tasks = [
         () => {
             return _.query(`
-                SELECT * FROM "best_commentrating"
-            `, {
-                type: QueryTypes.SELECT
-            });
-        },
-        deserialize
+                BEGIN;
+                SELECT * FROM "best_commentrating";
+                COMMIT;
+                BEGIN;
+                SELECT * FROM "Favorites";
+                COMMIT;
+            `);
+        }
     ];
     return pipeline(tasks, options);
 };

@@ -9,22 +9,7 @@ exports.getAllMyFavorite = (options) => {
     let tasks = [
         (options) => {
             return _.query(`
-                SELECT
-                  "Favorites"."id" as id,
-                  "Professors".id as "Professor_id", "Professors"."firstName" as "Professor_firstName", "Professors"."lastName" as "Professor_lastName",
-                  "Courses".id as "Course_id",
-                  "Sections".id as "Section_id",
-                  "c2"."id" as "Section_Course_id", "c2"."title" as "Section_Course_title"
-                FROM "Favorites"
-                  LEFT JOIN "Professors"
-                    ON "Favorites"."ProfessorId" = "Professors".id
-                  LEFT JOIN "Courses"
-                    ON "Favorites"."CourseId" = "Courses".id
-                  LEFT JOIN "Sections"
-                    ON "Favorites"."SectionId" = "Sections".id
-                  LEFT JOIN "Courses" as c2
-                    ON "Favorites"."SectionId" IS NOT NULL AND "Sections"."CourseId" = "c2".id
-                WHERE "Favorites"."UserId" = ${options.mw.user.id};
+                EXECUTE userFavorite(${options.mw.user.id});
             `, {
                 type: QueryTypes.SELECT
             });
