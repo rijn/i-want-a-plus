@@ -179,6 +179,7 @@ module.exports = function (grunt) {
             'clean',
             'eslint',
             'mocha',
+            'shell:buildTheme',
             'build',
             'continue:off',
             'continue:fail-on-warning'
