@@ -35,26 +35,6 @@ Promise.resolve().then(() => {
     ]);
 }).delay(500).then(() => {
     return models.sequelize.query(`
-        PREPARE userFavorite(int) AS
-          SELECT
-            "Favorites"."id" as id,
-            "Professors".id as "Professor_id", "Professors"."firstName" as "Professor_firstName", "Professors"."lastName" as "Professor_lastName",
-            "Courses".id as "Course_id",
-            "Sections".id as "Section_id",
-            "c2"."id" as "Section_Course_id", "c2"."title" as "Section_Course_title"
-          FROM "Favorites"
-            LEFT JOIN "Professors"
-              ON "Favorites"."ProfessorId" = "Professors".id
-            LEFT JOIN "Courses"
-              ON "Favorites"."CourseId" = "Courses".id
-            LEFT JOIN "Sections"
-              ON "Favorites"."SectionId" = "Sections".id
-            LEFT JOIN "Courses" as c2
-              ON "Favorites"."SectionId" IS NOT NULL AND "Sections"."CourseId" = "c2".id
-          WHERE "Favorites"."UserId" = $1;
-    `);
-}).delay(500).then(() => {
-    return models.sequelize.query(`
         CREATE OR REPLACE FUNCTION avg_comment_rating()
         RETURNS TRIGGER
         AS

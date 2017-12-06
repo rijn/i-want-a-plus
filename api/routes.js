@@ -79,6 +79,7 @@ module.exports = function apiRoutes () {
 
     // TopRating professors
     apiRouter.get('/toprating', wrapper(topController.getRating));
+    apiRouter.get('/topgpa', wrapper(topController.getGpa));
 
     return apiRouter;
 };

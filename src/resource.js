@@ -37,7 +37,8 @@ export default class Resource {
             comment: Vue.resource('comment{/id}', {}, {}),
             favorite: Vue.resource('favorite{/id}', {}, {}),
             top: {
-                rating: Vue.resource('toprating')
+                rating: Vue.resource('toprating'),
+                gpa: Vue.resource('topgpa')
             }
         };
 

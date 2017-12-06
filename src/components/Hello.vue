@@ -18,7 +18,19 @@
             <ul>
                 <li v-for="course in courses">
                     <div class="container">
-                        <CourseRatingCard :course="course" class="clickable" @click.native="handleClickCourseRating(course.id)"></CourseRatingCard>
+                        <CourseCard :course="course" class="clickable" @click.native="handleClickCourseRating(course.id)"></CourseCard>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <el-header class="header">
+            <h1>Top GPA Courses</h1>
+        </el-header>
+        <div class="main-container">
+            <ul>
+                <li v-for="course in courses_gpa">
+                    <div class="container">
+                        <CourseCard :course="course" class="clickable" @click.native="handleClickCourseRating(course.id)"></CourseCard>
                     </div>
                 </li>
             </ul>
@@ -29,7 +41,8 @@
 <script>
 import { Container, Header, Main } from 'element-ui';
 import Logo from './Logo';
-import CourseRatingCard from './CourseRatingCard';
+import CourseCard from './CourseCard';
+import _ from 'lodash';
 
 export default {
     name: 'Hello',
@@ -39,13 +52,14 @@ export default {
         'el-header': Header,
         'el-main': Main,
         Logo,
-        CourseRatingCard
+        CourseCard
     },
 
     data () {
         return {
             response: null,
-            courses: []
+            courses: [],
+            courses_gpa: []
         };
     },
 
@@ -58,8 +72,11 @@ export default {
 
     mounted () {
         this.$api.top.rating.get().then(({ body }) => {
+            this.courses = _.sampleSize(body, 20);
+        });
+        this.$api.top.gpa.get().then(({ body }) => {
             console.log(body);
-            this.courses = body;
+            this.courses_gpa = _.sampleSize(body, 20);
         });
     }
 };

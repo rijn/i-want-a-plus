@@ -9,14 +9,26 @@ exports.getRating = (options) => {
     let tasks = [
         () => {
             return _.query(`
-                BEGIN;
-                SELECT * FROM "best_commentrating";
-                COMMIT;
-                BEGIN;
-                SELECT * FROM "Favorites";
-                COMMIT;
-            `);
-        }
+                SELECT * FROM "best_commentrating"
+            `, {
+                type: QueryTypes.SELECT
+            });
+        },
+        deserialize
+    ];
+    return pipeline(tasks, options);
+};
+
+exports.getGpa = (options) => {
+    let tasks = [
+        () => {
+            return _.query(`
+                SELECT * FROM "best_gparating"
+            `, {
+                type: QueryTypes.SELECT
+            });
+        },
+        deserialize
     ];
     return pipeline(tasks, options);
 };
