@@ -1,7 +1,7 @@
 const Promise = require('bluebird');
 const _ = require('lodash');
 var models = require('./models');
-uids = _.range(2);
+uids = _.range(100);
 
 models.sequelize.authenticate().then(() => {
     return Promise.map(uids, uid => {
@@ -23,7 +23,7 @@ models.sequelize.authenticate().then(() => {
                     CourseId: course.id,
                     UserId: uid
                 });
-            });
+            }, { concurrency: 1 });
         });
-    });
+    }, { concurrency: 1 });
 }).done(() => models.sequelize.close());
